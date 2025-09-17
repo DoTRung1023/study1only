@@ -1,0 +1,23 @@
+/* Common form error message styles */
+
+.error-message {
+    color: red;
+    font-size: 0.9em;
+    margin-top: 5px;
+    display: none;
+}
+
+.form-group .error-message {
+    line-height: 1.2;
+}
+
+/* Gray helper text for forms */
+.form-helper {
+    font-size: 0.9em;
+    color: gray;
+}
+
+/* Hidden form groups */
+.form-group.hidden {
+    display: none;
+}

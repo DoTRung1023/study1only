@@ -1,0 +1,606 @@
+/* Leaderboard container styling */
+.leaderboard-container {
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 15px;
+    padding: 20px;
+    color: white;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    height: calc(100vh - 80px);
+    box-sizing: border-box;
+    font-family: 'Fredoka', sans-serif;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Header section (fixed, non-scrollable) */
+.leaderboard-header-section {
+    flex-shrink: 0;
+    margin-bottom: 0;
+}
+
+/* Data section (no independent scrolling) */
+.leaderboard-data-section {
+    flex: 1;
+    overflow: visible;
+    padding-right: 0px; /* No need for scrollbar space */
+    padding-top: 4px; /* Reduced padding between header and first item */
+}
+
+/* Removed legacy leaderboard-list selector - no longer needed */
+
+
+
+/* Current user section */
+.current-user-section {
+    background: rgba(0, 0, 0, 0.7);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 15px 15px; /* Match header/content padding */
+    margin-top: auto;
+    flex-shrink: 0;
+}
+
+.current-user-section .leaderboard-item {
+    margin-bottom: 0;
+}
+
+/* Current user not found styling */
+.current-user-not-found {
+    text-align: center;
+    padding: 20px;
+}
+
+.not-found-message {
+    color: rgba(255, 255, 255, 0.8);
+    font-family: 'Fredoka', sans-serif;
+    font-size: 0.95em;
+    line-height: 1.4;
+    background: rgba(255, 193, 7, 0.1);
+    border: 1px solid rgba(255, 193, 7, 0.3);
+    border-radius: 8px;
+    padding: 15px;
+}
+
+.change-region-hint {
+    color: rgba(255, 193, 7, 0.9);
+    font-weight: 500;
+    font-size: 0.9em;
+}
+
+#leaderboard-section.app-section {
+    padding: 80px 0 0 0 !important;
+    height: 100% !important;
+    align-items: flex-start !important;
+    width: 100% !important;
+}
+
+/* Separator styling */
+.leaderboard-separator {
+    display: none; /* Hide separator as we're using border-top on current-user-section */
+}
+
+/* Current user row styling */
+.leaderboard-item.current-user {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 0;
+}
+
+.leaderboard-item.current-user:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.leaderboard-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.leaderboard-header h1 {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 2em;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* Tab Navigation */
+.leaderboard-tabs {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px; /* Match header row gap */
+    margin-bottom: 5px;
+    padding: 10px 15px; /* Match header row padding exactly */
+    box-sizing: border-box;
+}
+
+/* No special desktop alignment needed - tabs now match header padding */
+
+.leaderboard-tab {
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 500;
+    color: #FFFFFF;
+    cursor: pointer;
+    opacity: 0.8;
+    padding: 10px 15px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    flex: 1;
+    text-align: center;
+    border: none;
+    font-size: 16px;
+    text-transform: none;
+    letter-spacing: normal;
+    min-width: 0;
+}
+
+.leaderboard-tab:hover {
+    opacity: 1;
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+}
+
+.leaderboard-tab.active {
+    font-weight: 500;
+    opacity: 1;
+    background: #000000;
+    color: #FFFFFF;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+}
+
+/* Header and content layout */
+.leaderboard-header-row {
+    display: grid;
+    grid-template-columns: 80px 2fr 1.2fr 1.3fr 1fr;
+    gap: 15px;
+    padding: 10px 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    font-weight: 600;
+    align-items: center;
+    margin-bottom: 4px; /* Reduced gap after header */
+}
+
+.leaderboard-item {
+    display: grid;
+    grid-template-columns: 80px 2fr 1.2fr 1.3fr 1fr;
+    gap: 15px;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 4px; /* Reduced gap between items */
+    align-items: center;
+    transition: background-color 0.3s ease;
+}
+
+.leaderboard-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* Top 3 styling */
+.leaderboard-item.top-1 {
+    background: linear-gradient(45deg, rgba(255, 215, 0, 0.15), rgba(255, 215, 0, 0.05));
+}
+
+.leaderboard-item.top-2 {
+    background: linear-gradient(45deg, rgba(192, 192, 192, 0.15), rgba(192, 192, 192, 0.05));
+}
+
+.leaderboard-item.top-3 {
+    background: linear-gradient(45deg, rgba(205, 127, 50, 0.15), rgba(205, 127, 50, 0.05));
+}
+
+/* Position number styling */
+.position {
+    font-weight: 600;
+    font-size: 1.1em;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rank {
+    font-size: 1.4em;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+}
+
+.rank sup {
+    font-size: 0.6em;
+    margin-left: 2px;
+}
+
+.rank-1 {
+    color: #FFD700; /* Gold */
+    text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+}
+
+.rank-2 {
+    color: #C0C0C0; /* Silver */
+    text-shadow: 0 0 5px rgba(192, 192, 192, 0.5);
+}
+
+.rank-3 {
+    color: #CD7F32; /* Bronze */
+    text-shadow: 0 0 5px rgba(205, 127, 50, 0.5);
+}
+
+.rank-image {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+}
+
+/* Region dropdown styling */
+.region-header {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    cursor: pointer;
+    padding: 5px 8px;
+    border-radius: 6px;
+    transition: background-color 0.2s ease;
+    width: 100%;
+}
+
+.region-header:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.filter-icon {
+    width: 24px;
+    height: 24px;
+    opacity: 1;
+    filter: brightness(0) invert(1); /* Makes the icon white */
+    pointer-events: none; /* Let clicks pass through to parent */
+}
+
+.region-display-text {
+    color: white;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 1em;
+    font-weight: 600;
+    pointer-events: none; /* Let clicks pass through to parent */
+}
+
+.region-select {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    color: white;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 1em;
+    font-weight: 600;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.region-select:focus {
+    outline: none;
+}
+
+.region-select option {
+    background: #1a1a1a;
+    color: white;
+    padding: 10px;
+}
+
+/* User info */
+.user-name {
+    font-weight: 500;
+    font-size: 1em;
+}
+
+/* User avatar styling */
+.name {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Location and region info */
+.user-city, .user-region {
+    font-size: 0.9em;
+    color: #ddd;
+}
+
+/* Column content alignment */
+.leaderboard-header-row > div:nth-child(1),
+.leaderboard-item > div:nth-child(1) {
+    text-align: center; /* Rank column */
+}
+
+.leaderboard-header-row > div:nth-child(2),
+.leaderboard-item > div:nth-child(2) {
+    text-align: left; /* Name column */
+}
+
+.leaderboard-header-row > div:nth-child(3),
+.leaderboard-item > div:nth-child(3) {
+    text-align: left; /* City column */
+}
+
+.leaderboard-header-row > div:nth-child(4),
+.leaderboard-item > div:nth-child(4) {
+    text-align: left; /* Region column */
+}
+
+.leaderboard-header-row > div:nth-child(5),
+.leaderboard-item > div:nth-child(5) {
+    text-align: right; /* Study Time column */
+}
+
+/* Time info */
+.study-time, .total-time {
+    font-weight: 600;
+    font-size: 1em;
+    color: white;
+    text-align: right;
+}
+
+/* Current user record at bottom */
+.current-user-record {
+    border-top: 2px solid rgba(255, 255, 255, 0.3);
+    padding-top: 15px;
+    margin-top: auto;
+}
+
+.current-user-record .record-label {
+    font-size: 0.9em;
+    color: #ccc;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.current-user-item {
+    display: grid;
+    grid-template-columns: 80px 60px 1fr 120px 120px 120px;
+    gap: 15px;
+    padding: 12px 15px;
+    background: rgba(76, 175, 80, 0.2);
+    border: 1px solid rgba(76, 175, 80, 0.4);
+    border-radius: 10px;
+    align-items: center;
+}
+
+/* No data message */
+.no-data {
+    text-align: center;
+    color: #aaa;
+    font-style: italic;
+    padding: 40px 20px;
+    font-size: 1.1em;
+}
+
+/* Loading state */
+.leaderboard-loading {
+    text-align: center;
+    padding: 40px 20px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    margin: 0 auto 20px;
+    border: 4px solid rgba(255, 255, 255, 0.1);
+    border-left-color: rgba(0, 122, 255, 0.8);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Error state improvements */
+.leaderboard-error {
+    text-align: center;
+    padding: 40px 20px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.error-message {
+    background: rgba(255, 59, 48, 0.1);
+    border: 1px solid rgba(255, 59, 48, 0.3);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 15px;
+}
+
+.retry-button {
+    background: rgba(0, 122, 255, 0.8);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.retry-button:hover {
+    background: rgba(0, 122, 255, 1);
+    transform: scale(1.05);
+}
+
+.retry-button:active {
+    transform: scale(0.95);
+}
+
+/* Override responsive styles */
+@media screen and (max-width: 768px) {
+    .leaderboard-container {
+        width: 100% !important;
+        padding: 20px !important; /* Reset to normal padding since section handles positioning */
+        margin: 0 !important;
+        height: calc(100vh - 125px) !important; /* Account for mobile nav height + section padding */
+    }
+
+    /* Create unified scroll wrapper for mobile */
+    .leaderboard-container {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+
+    /* Remove ALL individual section scrolling */
+    .leaderboard-header-section,
+    .leaderboard-data-section {
+        overflow: visible;
+    }
+
+    /* Adjust tabs for mobile horizontal scroll only */
+    .leaderboard-tabs {
+        display: flex !important; /* Override grid for mobile */
+        min-width: 672px !important; /* Match the content width on mobile */
+        gap: 15px !important; /* Match desktop gap */
+        padding: 10px 15px !important; /* Match header row padding */
+    }
+
+    .leaderboard-tab {
+        flex: 1 !important; /* Ensure equal width distribution on mobile */
+        min-width: 0 !important; /* Allow flex to work properly */
+        padding: 12px 8px !important; /* Reduce horizontal padding for mobile */
+        font-size: 15px !important;
+        white-space: nowrap !important;
+        height: auto !important;
+        min-height: 44px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        margin: 0 !important; /* Remove any margins */
+        box-sizing: border-box !important;
+    }
+
+    /* Set minimum width for header and items to maintain layout */
+    .leaderboard-header-row,
+    .leaderboard-item:not(.current-user),
+    .leaderboard-item.top-1,
+    .leaderboard-item.top-2,
+    .leaderboard-item.top-3,
+    .current-user-item {
+        min-width: 672px !important; /* Ensure content doesn't get cramped */
+        width: 672px !important; /* Force exact width to match header */
+        padding: 10px 15px !important; /* Override responsive.css padding to match header */
+    }
+
+    /* Separate rule for current user item to test different width */
+    .current-user-section .leaderboard-item.current-user {
+        min-width: 642px !important; /* 30px smaller than section (672px - 30px = 642px) */
+        width: 642px !important; /* 30px smaller than section (672px - 30px = 642px) */
+        padding: 10px 15px !important; /* Override responsive.css padding to match header */
+        box-sizing: border-box !important; /* Ensure padding is included in width */
+    }
+
+    /* Current user section should accommodate fixed width item */
+    .current-user-section {
+        padding: 15px 0 !important; /* Remove horizontal padding to allow full item width */
+        margin: 0 !important; /* Remove any margins that might cause overflow */
+        width: 672px !important; /* Fixed width to match item inside */
+        box-sizing: border-box !important;
+        overflow: visible !important; /* Allow horizontal scrolling */
+        display: flex !important; /* Use flexbox for centering */
+        justify-content: center !important; /* Center the current user item */
+        align-items: center !important; /* Vertically center as well */
+    }
+
+    /* Hide horizontal scrollbar but keep scroll functionality */
+    .leaderboard-container::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* For Firefox */
+    .leaderboard-container {
+        scrollbar-width: none;
+    }
+
+    /* Very small mobile - nav bar is shorter */
+    @media screen and (max-width: 541px) {
+        .leaderboard-container {
+            padding: 20px !important;
+            height: calc(100vh - 140px) !important; /* Reduced from 163px to give more scrolling space */
+            padding-bottom: 40px !important; /* Add extra bottom padding for scrolling space */
+        }
+    }
+
+    /* Medium mobile/tablet - nav bar is taller */
+    @media screen and (min-width: 542px) and (max-width: 768px) {
+        .leaderboard-container {
+            padding: 20px !important;
+            height: calc(100vh - 105px) !important; /* Reduced from 128px to give more scrolling space */
+            padding-bottom: 40px !important; /* Add extra bottom padding for scrolling space */
+        }
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .leaderboard-container {
+        width: 100% !important;
+        padding: 20px !important; /* Reset to normal padding since section handles positioning */
+        margin: 0 !important;
+        height: calc(100vh - 90px) !important; /* Reduced from 115px to give more scrolling space */
+        padding-bottom: 50px !important; /* Add extra bottom padding for scrolling space on very small screens */
+    }
+
+    /* Same horizontal scrolling approach for very small screens */
+    .leaderboard-header-row,
+    .leaderboard-item:not(.current-user),
+    .leaderboard-item.top-1,
+    .leaderboard-item.top-2,
+    .leaderboard-item.top-3,
+    .current-user-item {
+        min-width: 550px !important; /* Slightly smaller minimum width for very small screens */
+        width: 550px !important; /* Force exact width to match header */
+        padding: 10px 15px !important; /* Override responsive.css padding to match header */
+    }
+
+    /* Separate rule for current user item on small screens */
+    .current-user-section .leaderboard-item.current-user {
+        min-width: 550px !important; /* 30px smaller than section (580px - 30px = 550px) */
+        width: 550px !important; /* 30px smaller than section (580px - 30px = 550px) */
+        padding: 10px 15px !important; /* Override responsive.css padding to match header */
+        box-sizing: border-box !important; /* Ensure padding is included in width */
+    }
+
+    /* Match tabs width to content width for small screens */
+    .leaderboard-tabs {
+        min-width: 550px !important; /* Match header and items width */
+    }
+
+    /* Current user section should accommodate fixed width item for small screens */
+    .current-user-section {
+        padding: 15px 0 !important; /* Remove horizontal padding to allow full item width */
+        margin: 0 !important; /* Remove any margins that might cause overflow */
+        width: 580px !important; /* Fixed width to match item inside */
+        box-sizing: border-box !important;
+        overflow: visible !important; /* Allow horizontal scrolling */
+        display: flex !important; /* Use flexbox for centering */
+        justify-content: center !important; /* Center the current user item */
+        align-items: center !important; /* Vertically center as well */
+    }
+}

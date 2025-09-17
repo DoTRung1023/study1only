@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Personal Details</title>
+    <link rel="icon" type="image/png" href="images/web-icon.png">
+    <link rel="shortcut icon" type="image/png" href="images/web-icon.png">
+    <link rel="stylesheet" href="stylesheets/update.css">
+    <link rel="stylesheet" href="stylesheets/responsive.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fredoka">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <link rel="stylesheet" href="stylesheets/update-styles.css">
+    <link rel="stylesheet" href="stylesheets/auth.css">
+    <link rel="stylesheet" href="stylesheets/form-errors.css">
+    <script src="scripts/auth-check.js"></script>
+    <script src="scripts/updateProfile.js"></script>
+    <script src="scripts/keyboard-navigation.js"></script>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Update Personal Details</h1>
+        <form id="update-form">
+
+        <!-- Username -->
+        <div class="form-group">
+            <label for="username">New Username</label>
+            <input type="text" id="username" class="form-control" placeholder="Old Username"
+                   aria-describedby="username-help username-error" tabindex="1">
+            <p id="username-help" class="form-helper">Leave it blank if you do not want to change.</p>
+            <p id="username-error" class="error-message" role="alert" aria-live="polite"></p>
+        </div>
+
+        <!-- Address -->
+        <div class="form-group">
+            <label for="address">New City</label>
+            <input type="text" id="address" class="form-control" placeholder="Old City"
+                   aria-describedby="address-help" tabindex="2">
+            <p id="address-help" class="form-helper">Leave it blank if you do not want to change.</p>
+        </div>
+
+        <!-- Country/Region -->
+        <div class="form-group">
+            <label for="country">New Country/Region</label>
+            <select id="country" class="select2" required
+                    aria-describedby="country-help country-error" tabindex="3">
+                <option value="">Select your country</option>
+                <!-- Countries will be populated by JavaScript -->
+            </select>
+            <p id="country-help" class="form-helper">Leave it blank if you do not want to change.</p>
+            <p id="country-error" class="error-message" role="alert" aria-live="polite"></p>
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+            <label for="password">New Password</label>
+            <input type="password" id="password" class="form-control" placeholder="New Password"
+                   aria-describedby="password-help password-error" tabindex="4">
+            <p id="password-help" class="form-helper">Leave it blank if you do not want to change.</p>
+            <p id="password-error" class="error-message" role="alert" aria-live="polite"></p>
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="form-group hidden" id="confirm-password-group">
+            <label for="confirm-password">Confirm New Password</label>
+            <input type="password" id="confirm-password" class="form-control" placeholder="Confirm New Password"
+                   aria-describedby="confirm-password-error" tabindex="5">
+            <p id="confirm-password-error" class="error-message" role="alert" aria-live="polite">Passwords do not match.</p>
+        </div>
+
+        <!-- Buttons -->
+        <div class="button-group">
+            <button type="button" class="btn btn-cancel" onclick="window.location.href='home.html'"
+                    aria-label="Cancel changes and return to home" tabindex="6">Cancel</button>
+            <button type="button" class="btn btn-confirm" id="confirm-button"
+                    aria-label="Save changes to profile" tabindex="7">Confirm</button>
+        </div>
+        </form>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeConfirmModal()">×</span>
+            <h3>Confirm Update</h3>
+            <p>Are you sure you want to update your information?</p>
+            <div class="modal-buttons">
+                <button type="button" onclick="closeConfirmModal()">Cancel</button>
+                <button type="button" onclick="confirmUpdate()">OK</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

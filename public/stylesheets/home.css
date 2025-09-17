@@ -1,0 +1,761 @@
+/* General styles */
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', sans-serif;
+  height: 100%;
+}
+
+.app-container {
+  /* background-image: url('../images/default-background.jpg'); */
+  background-size: 100% 100%; /* Stretch the image to fit both width and height when needed */
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 100%;
+  color: white;
+  position: relative;
+  overflow-x: hidden; /* Prevent horizontal overflow */
+  overflow-y: hidden; /* Prevent scrolling to closed popups by default */
+}
+
+/* Allow scrolling only when popups are open */
+.show-achievements .app-container,
+.show-leaderboard .app-container,
+.show-studystats .app-container {
+  overflow-y: auto !important; /* Allow normal scrolling when popups are open */
+}
+
+/* For home section, allow limited scrolling within the visible content only */
+.show-home .app-container {
+  overflow-y: auto !important; /* Allow normal home page scrolling */
+  overflow-x: hidden !important; /* Prevent horizontal scrolling */
+}
+
+/* Top bar styles */
+.top-bar {
+  display: flex;
+  justify-content: flex-end;
+  background: linear-gradient(90deg, #5170FF 0%, #FF66C4 39%, #FF66C4 100%);
+  padding: 0px 20px;
+  align-items: center;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  position: relative;
+  z-index: 2001;
+}
+
+.nav-group {
+  display: flex;
+  align-items: center;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  cursor: pointer;
+  margin: 0 50px;
+  padding: 10px 0;
+  pointer-events: auto; /* Ensure pointer events work */
+  user-select: none; /* Prevent text selection */
+}
+
+.nav-item:hover span,
+.nav-item:active span,
+.nav-item.active span {
+  color: #5170FF;
+  opacity: 1;
+}
+
+/* Active state for nav items - removed background */
+.nav-item.nav-active span {
+  color: #5170FF !important;
+}
+
+.nav-item.nav-active .nav-icon:not(.profile-avatar) {
+  filter: brightness(0) saturate(100%) invert(34%) sepia(97%) saturate(749%) hue-rotate(210deg) brightness(101%) contrast(101%);
+}
+
+/* Highlight nav icons (except avatar) on hover/click */
+.nav-item:hover .nav-icon:not(.profile-avatar),
+.nav-item:active .nav-icon:not(.profile-avatar),
+.nav-item.active .nav-icon:not(.profile-avatar) {
+  /* This filter approximates #5170FF */
+  filter: brightness(0) saturate(100%) invert(34%) sepia(97%) saturate(749%) hue-rotate(210deg) brightness(101%) contrast(101%);
+  opacity: 1;
+}
+
+.nav-icon {
+  width: 32px;
+  height: 32px;
+  margin-bottom: 6px;
+}
+
+/* Profile button specific styling */
+#profile-link {
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  position: relative;
+  z-index: 1000;
+}
+
+#profile-link:hover {
+  opacity: 0.8;
+}
+
+#profile-link:active {
+  transform: scale(0.95);
+}
+
+.profile-avatar {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50%;
+  margin-top: -3px;
+  margin-bottom: 0px;
+  object-fit: cover !important;
+  min-width: 40px;
+  min-height: 40px;
+  padding: 0;
+  pointer-events: none; /* Let clicks pass through to parent */
+}
+
+.nav-item span {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  color: #FFFFFF;
+  text-align: center;
+}
+
+.nav-item:hover span {
+  opacity: 1;
+}
+
+/* Main content styles */
+.main-content {
+  position: relative;
+  height: calc(100% - 50px);
+  width: 100%;
+  max-width: none; /* Remove any width constraints */
+  padding: 0 20px; /* Add some padding for better spacing */
+  box-sizing: border-box;
+}
+
+.timer {
+  position: absolute;
+  top: 40px;
+  left: 10px;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 10px 15px;
+  border-radius: 10px;
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: none;
+}
+
+.timer-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.timer-header p {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  font-size: 24px;
+  color: white;
+  margin: 0;
+}
+
+.timer-header img {
+  width: 20px;
+  height: 20px;
+}
+
+.timer-icon {
+  width: 20px;
+  height: 20px;
+}
+
+#timer-display {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  font-size: 36px;
+  color: white;
+  margin: 0;
+  text-align: center;
+}
+
+.timer-controls {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.timer-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.button-icon {
+  width: 40px;
+  height: 40px;
+}
+
+.timer-button:hover .button-icon {
+  opacity: 0.8;
+}
+
+/* Time input styles */
+.time-input {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0; /* Remove spacing between parts */
+  font-family: 'Fredoka', sans-serif;
+  font-size: 18px;
+  color: white;
+}
+
+/* Style for the +/- buttons */
+.time-input img {
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  margin: 0 10px;
+}
+
+.time-input img:hover {
+  transform: scale(1.2);
+}
+
+/* Style for "Session Duration" and "Break Duration" labels */
+.timer-settings label {
+  font-family: 'Fredoka', sans-serif; /* Use Fredoka font */
+  font-size: 18px; /* Adjust font size */
+  font-weight: 400;
+  color: white;
+  margin-bottom: 5px;
+}
+
+#session-duration {
+  margin-bottom: 5px; /* Add spacing below the Session Duration time inputs */
+}
+
+#start-timer-button {
+  margin-top: 8px; /* Adjust this value to move the button further down */
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+#session-duration .time-part,
+#break-duration .time-part {
+  font-weight: 600; /* Make the time parts bold */
+}
+
+.time-part {
+  display: inline-block;
+  width: auto; /* Remove fixed width */
+  text-align: center;
+  border: none; /* Remove border */
+  background: none; /* Remove background */
+  padding: 0; /* Remove padding */
+  outline: none;
+  font-weight: 400;
+  font-size: 32px; /* Increase font size */
+  color: white;
+  cursor: pointer;
+}
+
+.time-colon {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 18px;
+  color: white;
+  margin: 0 5px; /* Add spacing around the colon */
+}
+
+.rounded-button {
+  background: rgba(0, 0, 0, 0.5); /* Match the Set Timer background color */
+  color: white;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  border-radius: 12px;
+  padding: 5px 30px;
+  cursor: pointer;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  margin-top: 20px; /* Add spacing below the time input */
+}
+
+.rounded-button:hover {
+  background: rgba(0, 0, 0, 0.7); /* Darker on hover */
+}
+
+.rounded-button:active {
+  background: black; /* Even darker on click */
+}
+
+#profile-popup {
+  display: none;
+  position: absolute;
+  top: 90px;
+  right: 10px;
+  background: white;
+  color: black;
+  width: 280px;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  z-index: 1001;
+  pointer-events: auto;
+}
+
+/* Show popup when display is set to block */
+#profile-popup[style*="display: block"] {
+  display: block !important;
+}
+
+#profile-popup {
+  display: block; /* Changed from none to block for v-show */
+  position: absolute;
+  top: 90px; /* Adjust based on your layout */
+  right: 10px; /* Adjust based on your layout */
+  background: white;
+  color: black;
+  width: 280px;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  pointer-events: auto; /* Ensure popup can be interacted with */
+}
+
+.profile-header {
+  display: flex; /* Align avatar and text horizontally */
+  align-items: center; /* Vertically align the text with the avatar */
+  gap: 10px; /* Add spacing between the avatar and the text */
+  margin-bottom: 15px; /* Add space below the profile header */
+}
+
+.profile-header img {
+  width: 70px !important;
+  height: 70px !important;
+  border-radius: 50%;
+  object-fit: cover !important;
+  min-width: 70px;
+  min-height: 70px;
+  padding: 0;
+}
+
+.profile-header h3 {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+  color: #FF66C4; /* Set the text color to #FF66C4 */
+  margin: 0; /* Remove default margin */
+}
+
+/* Style for the buttons in the popup */
+#profile-popup #change-details, #profile-popup #change-avatar, #profile-popup #logout {
+  display: flex; /* Place each button on a new line */
+  align-items: center;
+  width: 100%; /* Optional: Make buttons span the full width */
+  margin-bottom: 8px; /* Add spacing between buttons */
+  text-align: left; /* Align text to the left */
+  background: none; /* Remove default button background */
+  border: none; /* Remove default button border */
+  font-family: 'Fredoka', sans-serif;
+  font-size: 20px;
+  color: black;
+  cursor: pointer;
+  padding: 8px;
+}
+
+#profile-popup #logout {
+  padding-left: 10px;
+}
+
+#profile-popup button:last-child {
+  margin-bottom: 0px; /* Remove margin for the last button */
+}
+
+#profile-popup #change-details:hover, #profile-popup #change-avatar:hover, #profile-popup #logout:hover {
+  color: #FF66C4; /* Add hover effect */
+}
+
+img.popup-icon {
+  width: 28px; /* Set smaller width for the icons */
+  height: 28px; /* Set smaller height for the icons */
+  margin-right: 10px; /* Maintain spacing between the icon and text */
+}
+
+#profile-popup a {
+  text-decoration: none; /* Remove underline from links */
+}
+
+/* Avatar Popup Styles */
+.avatar-popup {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1001;
+}
+.upload-panel {
+    width: 320px;
+    background-color: white;
+    border-radius: 16px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.upload-area {
+    width: 150px;
+    height: 150px;
+    background-color: transparent;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+    position: relative;
+    transition: box-shadow 0.2s;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+.upload-area img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover !important;
+    min-width: 150px;
+    min-height: 150px;
+    cursor: default !important;
+}
+
+.upload-area:has(img) {
+    cursor: default !important;
+}
+
+/* Specific rule for uploaded/custom avatars */
+.upload-area img[src*="uploads"] {
+    object-fit: cover;
+    background-color: transparent;
+}
+
+#cropper-image {
+    max-width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.cropper-view-box {
+    border-radius: 50%;
+    outline: none;
+}
+
+.cropper-face {
+    background-color: transparent;
+}
+
+.upload-text {
+  font-size: 20px;
+  color: black;
+  background: none;
+  border-radius: 8px;
+  padding: 10px 24px;
+  margin: 0px auto 12px auto;
+  cursor: pointer;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 400;
+  box-shadow: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  transition: color 0.2s;
+  border: none;
+  gap: 8px;
+}
+
+.upload-text:hover {
+  color: #FF66C4;
+  background: none;
+  box-shadow: none;
+}
+
+#reset-avatar.upload-text {
+  margin-top: -28px;
+  margin-bottom: -5px;
+}
+
+.button-group {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    margin-top: 10px;
+}
+.btn {
+    padding: 10px 0;
+    border: none;
+    border-radius: 25px;
+    font-size: 14px;
+    cursor: pointer;
+    width: 110px;
+    text-align: center;
+}
+.btn-cancel {
+    font-family: 'Fredoka', sans-serif;
+    background: linear-gradient(90deg, #5170FF 0%, #FF66C4 100%);
+    color: white;
+}
+.btn-confirm {
+    font-family: 'Fredoka', sans-serif;
+    background: linear-gradient(90deg, #5170FF 0%, #FF66C4 100%);
+    color: white;
+}
+.btn:hover {
+    opacity: 0.9;
+}
+
+/* Base popup styles */
+.nav-popup {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: transparent;
+  pointer-events: none;
+  z-index: 2000;
+  display: none;
+}
+
+.nav-popup-content {
+  pointer-events: auto;
+}
+
+/* Default popup style - for Achievements and Leaderboard */
+.nav-popup.default-popup .nav-popup-content {
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  border-radius: 15px 15px 0 0;
+  padding: 24px;
+  min-width: 280px;
+  min-height: 150px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+  position: fixed !important;
+  top: 70px !important;
+  bottom: 20px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: 80%;
+  max-width: 800px;
+  height: calc(100vh - 90px) !important;
+  overflow-y: auto;
+  margin: 0 !important;
+  padding-bottom: 20px !important;
+  z-index: 1999 !important;
+}
+
+/* Adjusted positioning for different mobile ranges to achieve 3px gap */
+
+/* Very small mobile - nav bar might be shorter */
+@media screen and (max-width: 541px) {
+  .nav-popup.default-popup .nav-popup-content {
+    top: 80px !important; /* 3px gap for small screens */
+    height: calc(100vh - 100px) !important; /* Adjust height accordingly */
+  }
+}
+
+/* Medium mobile/tablet range - nav bar is taller */
+@media screen and (min-width: 542px) and (max-width: 768px) {
+  .nav-popup.default-popup .nav-popup-content {
+    top: 95px !important; /* 3px gap for medium screens */
+    height: calc(100vh - 115px) !important; /* Adjust height accordingly */
+  }
+}
+
+/* Override any inline styles */
+.nav-popup.default-popup .nav-popup-content[style] {
+  position: fixed !important;
+  top: 70px !important;
+  bottom: 20px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  border-radius: 15px 15px 0 0 !important;
+  padding-bottom: 20px !important;
+  height: calc(100vh - 90px) !important;
+}
+
+/* Override inline styles for the specific range too */
+@media screen and (min-width: 500px) and (max-width: 768px) {
+  .nav-popup.default-popup .nav-popup-content[style] {
+    top: 89px !important; /* Override inline styles for 3px gap */
+    height: calc(100vh - 109px) !important; /* Adjust height accordingly */
+  }
+}
+
+.default-popup .nav-popup-close {
+  color: white;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.default-popup #nav-popup-title {
+  color: white;
+  margin-bottom: 16px;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+/* Stats popup style - specific to Study Stats */
+.stats-popup {
+  pointer-events: none;
+}
+
+.stats-popup .nav-popup-content {
+  pointer-events: auto;
+  background-color: rgba(48, 43, 43, 0.5);
+  color: white;
+  border-radius: 40px;
+  padding: 0 !important;
+  width: 240px !important;
+  height: 320px !important;
+  box-shadow: none;
+  position: fixed !important;
+  /* top position will be set dynamically by JavaScript */
+  /* left position will be set dynamically by JavaScript */
+  left: auto !important;
+  right: auto !important;
+  transform: none !important;
+  margin: 0 !important;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch; /* Changed from center to stretch to remove any centering spacing */
+  justify-content: flex-start;
+  z-index: 1999 !important;
+}
+
+.stats-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  padding-top: 0;
+  margin-top: 0;
+}
+
+.stats-popup .nav-popup-close {
+  position: absolute;
+  top: 0;
+  right: 20px;
+  font-size: 32px;
+  color: #FFFFFF;
+  cursor: pointer;
+  font-weight: bold;
+  user-select: none;
+}
+
+.stats-popup #nav-popup-title {
+  color: #FF66C4;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 24px;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+/* Hide title only for problematic width range (tablets/small screens) */
+@media screen and (min-width: 500px) and (max-width: 768px) {
+  .stats-popup #nav-popup-title {
+    display: none !important; /* Hide title element to remove spacing for this width range */
+  }
+}
+
+/* Study Stats specific styles */
+.stat-label {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  font-size: 28px;
+  color: #FFFFFF;
+  margin-bottom: 2px;
+}
+
+.stat-time-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 10px;
+}
+
+.stat-time-row .timer-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.stat-time {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  font-size: 28px;
+  color: #FFFFFF;
+}
+
+/* Add specific rules for custom avatars */
+.profile-avatar[src*="uploads"],
+.profile-header img[src*="uploads"] {
+    object-fit: cover !important;
+    background-color: transparent;
+}
+
+/* Toast notification */
+.toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #38c172;
+    color: white;
+    padding: 14px 24px;
+    border-radius: 12px;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 500;
+    font-size: 18px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease, top 0.4s ease;
+}
+
+.toast.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Error toast variant */
+.toast.error {
+    background-color: #e3342f;
+}

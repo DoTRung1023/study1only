@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="icon" type="image/png" href="images/web-icon.png">
+    <link rel="shortcut icon" type="image/png" href="images/web-icon.png">
+    <link rel="stylesheet" href="stylesheets/home.css">
+    <link rel="stylesheet" href="stylesheets/stats.css">
+    <link rel="stylesheet" href="stylesheets/spotify.css">
+    <link rel="stylesheet" href="stylesheets/background.css">
+    <link rel="stylesheet" href="stylesheets/achievements.css">
+    <link rel="stylesheet" href="stylesheets/leaderboard.css">
+    <!-- Vue.js for Spotify functionality -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+    <!-- Load scripts in proper order -->
+    <script src="scripts/userProfile.js"></script>
+    <script src="scripts/home.js"></script>
+    <script src="scripts/toggle.js"></script>
+    <script src="scripts/home-clock.js"></script>
+    <script src="scripts/nav-popup.js"></script>
+    <link rel="stylesheet" href="stylesheets/responsive.css">
+    <script src="scripts/home-background.js"></script>
+    <script src="scripts/avatar-popup.js"></script>
+    <script src="scripts/cookie-utils.js"></script>
+    <script src="scripts/home-spotify.js"></script>
+    <script src="scripts/achievements.js"></script>
+    <script src="scripts/leaderboard.js"></script>
+    <script>
+        // Refresh achievements when page becomes visible
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden && typeof window.refreshAchievements === 'function') {
+                const appContainer = document.querySelector('.app-container');
+                if (appContainer && appContainer.classList.contains('show-achievements')) {
+                    window.refreshAchievements();
+                }
+            }
+        });
+
+        // Additional timer completion handler
+        document.addEventListener('DOMContentLoaded', function() {
+            // Listen for timer completion events
+            document.addEventListener('timerComplete', function(event) {
+                console.log('Timer completion event detected:', event.detail);
+                if (typeof window.onTimerComplete === 'function') {
+                    window.onTimerComplete(event.detail.duration);
+                }
+            });
+        });
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.js"></script>
+    <meta http-equiv="Content-Security-Policy"
+        content="script-src 'self' https://sdk.scdn.co https://cdn.jsdelivr.net https://code.jquery.com https://cdnjs.cloudflare.com 'unsafe-eval' 'unsafe-inline';">
+    <link rel="stylesheet" href="stylesheets/auth.css">
+    <script src="scripts/auth-check.js"></script>
+    <script src="scripts/keyboard-navigation.js"></script>
+</head>
+
+<body>
+    <!-- Web Logo -->
+    <div style="position: absolute; top: 10px; left: 45px; z-index: 2002; padding: 5px;">
+      <img src="images/web-logo.png" alt="Study1Only Logo" style="height: 50px; width: auto;">
+    </div>
+
+    <div class="app-container show-home">
+        <nav class="top-bar">
+            <div class="nav-group">
+                <a href="#" class="nav-item active" data-popup="studysolo"
+                   aria-label="Navigate to Home section" tabindex="0">
+                    <img src="images/studysolo.png" alt="" class="nav-icon" role="presentation">
+                    <span>Home</span>
+                </a>
+
+                <a href="#" class="nav-item" data-popup="studystats"
+                   aria-label="Navigate to Study Stats section" tabindex="0">
+                    <img src="images/studystats.png" alt="" class="nav-icon" role="presentation">
+                    <span>Study Stats</span>
+                </a>
+
+                <a href="#" class="nav-item" data-popup="leaderboard"
+                   aria-label="Navigate to Leaderboard section" tabindex="0">
+                    <img src="images/leaderboard.png" alt="" class="nav-icon" role="presentation">
+                    <span>Leaderboard</span>
+                </a>
+
+                <a href="#" class="nav-item" data-popup="achievements"
+                   aria-label="Navigate to Achievements section" tabindex="0">
+                    <img src="images/achievements.png" alt="" class="nav-icon" role="presentation">
+                    <span>Achievements</span>
+                </a>
+
+                <!-- Profile button with vanilla JavaScript -->
+                <div class="nav-item" id="profile-link" role="button" aria-label="Open profile menu" tabindex="0"
+                     style="cursor: pointer; pointer-events: auto;">
+                    <img src="images/default-avatar.png" alt="" class="nav-icon profile-avatar" role="presentation">
+                    <span>Profile</span>
+                </div>
+            </div>
+        </nav>
+
+        <div class="main-content">
+            <!-- Home Section -->
+            <div id="home-section" class="app-section">
+                <div class="timer">
+                    <div class="timer-header">
+                        <img src="images/timer-clock.png" alt="Timer Icon" class="timer-icon">
+                        <p>Personal Timer</p>
+                    </div>
+                    <h1 id="timer-display">00:00:00</h1>
+                    <div class="timer-controls">
+                        <button class="timer-button" id="toggle-button" type="button"
+                                title="Continue timer" aria-label="Play/Pause timer">
+                            <img src="images/timer-play.png" alt="" class="button-icon" role="presentation">
+                        </button>
+                        <button class="timer-button" id="reset-button" type="button"
+                                title="Start new study session" aria-label="Reset timer">
+                            <img src="images/timer-stop.png" alt="" class="button-icon" role="presentation">
+                        </button>
+                    </div>
+                </div>
+                <div id="spotify-container">
+                </div>
+                <!-- choosing background section -->
+                <div class="background-container">
+                    <img src="images/pexel/minimize.png" alt="Minimize Icon" class="background-top-left"
+                        title="Minimize background panel">
+                    <p class="background-label">Background</p>
+                    <img src="images/pexel/create-album.png" alt="Create Album Icon" class="background-top-right"
+                        title="Create new album">
+                    <button type="button" class="open-button">Open background setting</button>
+                    <div class="source">
+                        <span class="active" id="pexels">Pexels</span>
+                        <span id="saved">Albums</span>
+                    </div>
+                    <div class="search-pexels">
+                        <div class="pexels-search-box">
+                            <img class="search-icon-bg" src="images/pexel/search.png" alt="search-icon" />
+                            <input type="text" class="search-input" placeholder="Search images from pexels..." />
+                            <img class="clear-icon-bg" src="images/pexel/close-search.png" alt="clear-icon" />
+                        </div>
+                        <div class="pexels-results">
+
+                        </div>
+                    </div>
+                    <div class="search-album">
+                        <div class="album-sort-row">
+                            <button id="album-sort-btn" class="album-sort-btn" title="Sort Albums" type="button">
+                                <span class="album-sort-icon-row">
+                                    <img src="images/pexel/sort/sort-1.png" alt="sort-1"
+                                        style="width: 15px; height: 10px;" />
+                                    <img src="images/pexel/sort/sort-2.png" alt="sort-2"
+                                        style="width: 16px; height: 16px; position: relative; top: -3px;" />
+                                </span>
+                            </button>
+                            <div id="album-sort-dropdown" class="album-sort-dropdown">
+
+                            </div>
+                        </div>
+                        <div class="album-results">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Achievements Section -->
+        <div id="achievements-section" class="app-section">
+            <div class="achievements-container">
+                <div class="achievements-header">
+                    <h1>Achievements <span class="total">(Total: 3/4)</span></h1>
+                </div>
+                <div class="achievement-list">
+                    <!-- Achievement items will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- Leaderboard Section -->
+        <div id="leaderboard-section" class="app-section">
+            <div class="leaderboard-container">
+                <!-- Period Tabs -->
+                <div class="leaderboard-tabs" role="tablist" aria-label="Leaderboard time periods">
+                    <button type="button" class="leaderboard-tab active" data-period="weekly"
+                            role="tab" aria-selected="true" aria-controls="leaderboard-content">Weekly</button>
+                    <button type="button" class="leaderboard-tab" data-period="monthly"
+                            role="tab" aria-selected="false" aria-controls="leaderboard-content">Monthly</button>
+                    <button type="button" class="leaderboard-tab" data-period="alltime"
+                            role="tab" aria-selected="false" aria-controls="leaderboard-content">All Time</button>
+                </div>
+
+                <!-- Leaderboard content will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Profile popup with vanilla JavaScript -->
+        <div id="profile-popup" style="display: none; pointer-events: auto;">
+            <div class="profile-header">
+                <img src="images/default-avatar.png" alt="User Avatar">
+                <h3>User</h3>
+            </div>
+            <div class="profile-actions">
+                <div id="change-details" onclick="window.location.href='update.html';" style="cursor: pointer;">
+                    <img src="images/change-personal-details.png" alt="Change Details Icon" class="popup-icon">
+                    Change Personal Details
+                </div>
+                <button id="change-avatar" type="button">
+                    <img src="images/change-avatar.png" alt="Change Avatar Icon" class="popup-icon">
+                    Change Avatar
+                </button>
+                <button id="logout" type="button">
+                    <img src="images/log-out-black.png" alt="Log Out Icon" class="popup-icon">
+                    Log Out
+                </button>
+            </div>
+        </div>
+
+        <!-- Navigation Popup Container -->
+        <div id="nav-popup" class="nav-popup">
+            <div class="nav-popup-content">
+                <h2 id="nav-popup-title">Navigation</h2>
+                <div id="nav-popup-body"></div>
+            </div>
+        </div>
+
+        <!-- Avatar Popup -->
+        <div class="avatar-popup" id="avatar-popup" style="display: none;">
+            <div class="upload-panel">
+                <div class="upload-area" id="avatar-upload-area">
+                    <!-- Image preview will appear here -->
+                </div>
+                <input type="file" id="avatar-input" accept="image/*" style="display:none;">
+                <div class="upload-text" id="choose-avatar">Choose from computer</div>
+                <div class="upload-text" id="reset-avatar">Reset to default avatar</div>
+                <div class="button-group">
+                    <button type="button" id="avatar-cancel" class="btn btn-cancel">Cancel</button>
+                    <button type="button" id="avatar-confirm" class="btn btn-confirm">Confirm</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add to Album Popup Modal -->
+        <div class="add-to-album-modal" id="add-to-album-modal" style="display: none;">
+            <div class="add-to-album-content">
+                <img src="images/pexel/close-window.png" class="add-to-album-close" id="add-to-album-close" alt="Close"
+                    title="Close" />
+                <span class="add-to-album-title">Add to album</span>
+                <img src="images/pexel/plus.png" class="add-to-album-plus" id="add-to-album-plus" alt="Create Album"
+                    title="Create new album" />
+                <div class="add-to-album-list" id="add-to-album-list">
+                    <!-- Album items will be rendered here by JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Create Album Modal -->
+        <div class="create-album-modal" id="create-album-modal" style="display: none;">
+            <div class="create-album-content">
+                <img src="images/pexel/close-window.png" class="create-album-close" id="create-album-close" alt="Close"
+                    title="Close" />
+                <span class="create-album-title">Create Album</span>
+                <div class="create-album-check" id="create-album-check">
+                    <img src="images/pexel/check.png" alt="Create" title="Create album" />
+                </div>
+                <div class="create-album-form">
+                    <div class="album-avatar">
+                        <img src="images/pexel/default-album.png" alt="Album Avatar" />
+                    </div>
+                    <div class="album-name-input">
+                        <input type="text" id="album-name" placeholder="Album name" maxlength="25" />
+                        <div class="length-counter">0/25</div>
+                        <div class="validation-text">Length from 1 to 25 characters</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Album Modal -->
+        <div class="edit-album-modal" id="edit-album-modal" style="display: none;">
+            <div class="edit-album-content">
+                <img src="images/pexel/close-window.png" class="edit-album-close" id="edit-album-close" alt="Close"
+                    title="Close" />
+                <span class="edit-album-title">Edit album</span>
+                <img src="images/pexel/delete.png" class="edit-album-delete" id="edit-album-delete" alt="Delete"
+                    title="Delete album" />
+                <div class="edit-album-form">
+                    <div class="album-avatar">
+                        <img src="images/pexel/default-album.png" alt="Album Avatar" id="edit-album-avatar" />
+                    </div>
+                    <div class="album-name-input">
+                        <input type="text" id="edit-album-name" placeholder="Album name" maxlength="25" />
+                        <div class="edit-length-counter">0/25</div>
+                        <div class="edit-validation-text" style="opacity: 0;">Length from 1 to 25 characters</div>
+                    </div>
+                    <div class="edit-album-divider"></div>
+                    <div class="edit-album-section-title">Choose an image to set as album avatar</div>
+                    <div class="edit-album-images" id="edit-album-images">
+                        <!-- Album images will be populated here -->
+                    </div>
+                    <button class="edit-album-confirm" id="edit-album-confirm" type="button">Confirm</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delete Album Confirmation Modal -->
+        <div id="deleteAlbumModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <span class="modal-close" id="deleteAlbumModalClose">×</span>
+                <h3>Confirm Album Deletion</h3>
+                <p id="deleteAlbumModalText">Are you sure you want to delete this album? This action cannot be undone.</p>
+                <div class="modal-buttons">
+                    <button type="button" id="deleteAlbumModalCancel">Cancel</button>
+                    <button type="button" id="deleteAlbumModalConfirm">Delete</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- View Album Images Modal -->
+        <div id="viewAlbumModal" class="view-album-modal" style="display: none;">
+            <div class="view-album-content">
+                <img src="images/pexel/close-window.png" class="view-album-close" id="viewAlbumClose" alt="Close" title="Close" />
+                <span class="view-album-title" id="viewAlbumTitle">Album title</span>
+                <img src="images/pexel/remove-image.png" class="view-album-delete-all" id="viewAlbumDeleteAll" alt="Delete All" title="Clear all images from album" />
+                <div class="view-album-images" id="viewAlbumImages">
+                    <!-- Album images will be populated here -->
+                </div>
+                <button class="view-album-remove-selected" id="viewAlbumRemoveSelected" type="button">Remove Selected</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

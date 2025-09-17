@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Study1Only Login</title>
+  <link rel="icon" type="image/png" href="images/web-icon.png">
+  <link rel="shortcut icon" type="image/png" href="images/web-icon.png">
+  <link rel="stylesheet" href="stylesheets/login.css">
+  <link rel="stylesheet" href="stylesheets/login-modal.css">
+  <link rel="stylesheet" href="stylesheets/responsive.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fredoka">
+  <script src="scripts/login.js" defer></script>
+</head>
+<body>
+    <div class="desktop">
+    <div class="main-container">
+      <!-- Left gradient section -->
+      <div class="overlap">
+        <!-- Logo moved to top -->
+        <div style="text-align: center; margin-bottom: 2rem;">
+          <img src="images/web-logo.png" alt="Study1Only Logo" style="height: 250px; width: auto; filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));">
+        </div>
+
+        <!-- Text below logo with bigger font sizes -->
+        <div>
+          <div class="text-wrapper-2" style="font-size: 3.5rem; margin-bottom: 1.5rem;">Welcome to Study1Only</div>
+          <div class="text-wrapper" style="font-size: 1.8rem;">
+            A Music-Enhanced Learning Platform
+          </div>
+        </div>
+      </div>
+
+      <!-- Right form section -->
+      <div class="right-section">
+        <div class="text-wrapper-3">User Login</div>
+
+        <form id="loginForm" onsubmit="return false;">
+          <!-- Username -->
+          <div class="input-wrapper">
+            <div class="input-group">
+              <span class="icon">👤</span>
+              <input type="text" placeholder="Username" id="username" tabindex="1" />
+            </div>
+          </div>
+
+          <!-- Password -->
+          <div class="input-wrapper" style="margin-bottom: 0;">
+            <div class="input-group">
+              <span class="icon">🔒</span>
+              <input type="password" placeholder="Password" id="password" tabindex="2" />
+              <span class="toggle-password" id="toggleIcon" onclick="togglePassword()" tabindex="3">
+                <img src="images/hide.png" alt="hide" />
+              </span>
+            </div>
+          </div>
+
+          <!-- Error message outside input wrapper for proper centering -->
+          <div style="display: none; justify-content: center; align-items: center; width: 100%; height: 25px; margin: 0 auto 5px auto; position: relative; left: 0; right: 0;" id="error-message-container">
+            <div id="error-message" style="color: red; font-size: 0.9em; line-height: 1.2; text-align: center;"></div>
+          </div>
+
+          <!-- Sign In Button -->
+          <div id="button-container" style="margin-top: 1.5rem; display: flex; flex-direction: column; align-items: center; text-align: center;">
+            <button class="btn" type="submit" id="loginButton" style="margin-left: 0;" tabindex="4">Sign in</button>
+            <p class="signup" style="margin: 20px 0 0 0;">Don't have an account? <a href="signup.html" tabindex="5">Sign up</a></p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- CAPTCHA Modal -->
+  <div id="captcha-modal" class="captcha-modal">
+    <div class="captcha-modal-content">
+      <h2>CAPTCHA Verification</h2>
+      <div class="captcha-question">
+        <span id="modal-captcha-question"></span>
+      </div>
+      <input type="text" id="modal-captcha-answer" placeholder="Your answer" class="captcha-input" />
+      <p id="modal-captcha-error" class="captcha-error"></p>
+      <div class="captcha-buttons">
+        <button id="modal-captcha-cancel" type="button" class="captcha-btn captcha-btn-cancel">Cancel</button>
+        <button id="modal-captcha-submit" type="button" class="captcha-btn captcha-btn-submit">Submit</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

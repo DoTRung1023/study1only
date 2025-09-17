@@ -1,0 +1,375 @@
+/* Main sections container */
+.main-sections-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+/* Prevent scrolling access to closed popups - override app-container overflow */
+.show-home .main-sections-container {
+    overflow: hidden !important; /* Prevent any scrolling to off-screen sections */
+}
+
+.show-achievements .main-sections-container,
+.show-leaderboard .main-sections-container,
+.show-studystats .main-sections-container {
+    overflow-y: auto !important; /* Allow normal scrolling when popups are open */
+    overflow-x: hidden !important; /* Prevent horizontal scrolling */
+}
+
+/* Individual section styling with direct transitions */
+.app-section {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    pointer-events: all;
+    z-index: 0;
+    -webkit-transition: transform 0.3s cubic-bezier(0, 0, 0.21, 1);
+    transition: transform 0.3s cubic-bezier(0, 0, 0.21, 1);
+    overflow-y: auto;
+    padding-top: 60px;
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Initial positions - all sections start below the viewport except home */
+#achievements-section,
+#studystats-section,
+#leaderboard-section {
+    -webkit-transform: translate3d(0, 100%, 0);
+    transform: translate3d(0, 100%, 0);
+}
+
+/* Home starts in view */
+#home-section {
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+}
+
+/* Show home - home is visible, others are below */
+.show-home #home-section {
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    z-index: 1;
+}
+
+.show-home #achievements-section,
+.show-home #studystats-section,
+.show-home #leaderboard-section {
+    -webkit-transform: translate3d(0, 100%, 0);
+    transform: translate3d(0, 100%, 0);
+    z-index: 0;
+}
+
+/* Show achievements - achievements slides up, home slides down */
+.show-achievements #achievements-section {
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    z-index: 1;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: all;
+}
+
+.show-achievements #home-section {
+    -webkit-transform: translate3d(0, -100%, 0);
+    transform: translate3d(0, -100%, 0);
+    z-index: 0;
+}
+
+.show-achievements #studystats-section,
+.show-achievements #leaderboard-section {
+    -webkit-transform: translate3d(0, 100%, 0);
+    transform: translate3d(0, 100%, 0);
+    z-index: 0;
+}
+
+/* Show study stats - studystats slides up, home slides down */
+.show-studystats #studystats-section {
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    z-index: 1;
+}
+
+.show-studystats #home-section {
+    -webkit-transform: translate3d(0, -100%, 0);
+    transform: translate3d(0, -100%, 0);
+    z-index: 0;
+}
+
+.show-studystats #achievements-section,
+.show-studystats #leaderboard-section {
+    -webkit-transform: translate3d(0, 100%, 0);
+    transform: translate3d(0, 100%, 0);
+    z-index: 0;
+}
+
+/* Show leaderboard - leaderboard slides up, home slides down */
+.show-leaderboard #leaderboard-section {
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    z-index: 1;
+}
+
+.show-leaderboard #home-section {
+    -webkit-transform: translate3d(0, -100%, 0);
+    transform: translate3d(0, -100%, 0);
+    z-index: 0;
+}
+
+.show-leaderboard #achievements-section,
+.show-leaderboard #studystats-section {
+    -webkit-transform: translate3d(0, 100%, 0);
+    transform: translate3d(0, 100%, 0);
+    z-index: 0;
+}
+
+/* Achievements container styling - match leaderboard full-screen design */
+.achievements-container {
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 15px;
+    padding: 20px;
+    color: white;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    height: calc(100vh - 80px);
+    box-sizing: border-box;
+    font-family: 'Fredoka', sans-serif;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+    top: 0;
+    transform: none;
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Update achievements section to match leaderboard */
+#achievements-section.app-section {
+    padding: 80px 0 0 0 !important;
+    height: 100% !important;
+    align-items: flex-start !important;
+    width: 100% !important;
+}
+
+.achievements-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-shrink: 0;
+}
+
+.achievements-header h1 {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 2em;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* Achievement list with scrollable content */
+.achievement-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 5px; /* Space for scrollbar */
+}
+
+/* Custom scrollbar styling for achievement list */
+.achievement-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.achievement-list::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+}
+
+.achievement-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+}
+
+.achievement-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Firefox scrollbar styling for achievement list */
+.achievement-list {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.2) rgba(0, 0, 0, 0.3);
+}
+
+.achievement-item {
+    background: rgba(40, 40, 40, 0.8);
+    border-radius: 10px;
+    padding: 15px;
+    display: flex;
+    align-items: flex-start;
+    font-family: 'Fredoka', sans-serif;
+    transition: all 0.3s ease;
+}
+
+.achievement-item.achieved {
+    background: rgba(76, 175, 80, 0.2);
+    border: 1px solid rgba(76, 175, 80, 0.4);
+}
+
+.achievement-item.locked {
+    background: rgba(60, 60, 60, 0.6);
+    border: 1px solid rgba(100, 100, 100, 0.3);
+}
+
+.achievement-icon {
+    width: 50px;
+    height: 50px;
+    margin-right: 15px;
+    transition: all 0.3s ease;
+}
+
+.achievement-icon.locked-icon {
+    opacity: 0.6;
+    filter: grayscale(0.5);
+}
+
+.achievement-info {
+    flex: 1;
+    position: relative;
+}
+
+.achievement-title {
+    font-size: 1.2em;
+    font-weight: 600; /* Match admin panel font weight */
+    margin-bottom: 5px;
+    margin-top: 0;
+    font-family: 'Fredoka', sans-serif; /* Added font family */
+}
+
+.achievement-description {
+    color: #ccc;
+    margin-bottom: 10px;
+    font-family: 'Fredoka', sans-serif; /* Added font family */
+    font-weight: 400; /* Match admin panel body text weight */
+}
+
+.achievement-progress, .progress-bar {
+    width: 100%;
+    height: 10px;
+    background: #444;
+    border-radius: 5px;
+    overflow: hidden;
+    margin: 10px 0;
+}
+
+.progress-bar .progress-fill, .progress-fill {
+    height: 100%;
+    background: #4CAF50;
+    transition: width 0.3s ease;
+}
+
+.achievement-stats, .progress-text {
+    text-align: right;
+    color: #aaa;
+    font-size: 0.9em;
+    display: block;
+    font-family: 'Fredoka', sans-serif; /* Added font family */
+    font-weight: 400; /* Match admin panel body text weight */
+}
+
+.checkmark {
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: #4CAF50;
+    font-size: 1.5em;
+    font-family: 'Fredoka', sans-serif; /* Added font family */
+    font-weight: 600; /* Bold checkmark */
+}
+
+.total {
+    font-size: 0.6em;
+    opacity: 0.8;
+    font-family: 'Fredoka', sans-serif; /* Added font family */
+    font-weight: 400; /* Match admin panel body text weight */
+}
+
+/* Navigation link active states - removed background */
+.nav-item.active {
+    border-radius: 8px;
+}
+
+.achievement-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.achievement-status.achieved {
+    color: #4CAF50;
+}
+
+.status-icon {
+    font-size: 1.2em;
+    font-weight: 600;
+}
+
+.status-icon.locked {
+    color: #888;
+    font-size: 1em;
+}
+
+.status-text {
+    font-weight: 500;
+    font-size: 0.9em;
+}
+
+.progress-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 5px;
+}
+
+/* Override responsive styles to match leaderboard */
+@media screen and (max-width: 768px) {
+    .achievements-container {
+        padding: 20px !important;
+        height: calc(100vh - 125px) !important;
+        padding-bottom: 40px !important; /* Add extra bottom padding for scrolling space */
+    }
+
+    @media screen and (max-width: 541px) {
+        .achievements-container {
+            padding: 20px !important;
+            height: calc(100vh - 140px) !important; /* Reduced to give more scrolling space */
+            padding-bottom: 40px !important; /* Add extra bottom padding for scrolling space */
+        }
+    }
+
+    @media screen and (min-width: 542px) and (max-width: 768px) {
+        .achievements-container {
+            padding: 20px !important;
+            height: calc(100vh - 105px) !important; /* Reduced to give more scrolling space */
+            padding-bottom: 40px !important; /* Add extra bottom padding for scrolling space */
+        }
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .achievements-container {
+        padding: 20px !important;
+        height: calc(100vh - 90px) !important; /* Reduced to give more scrolling space */
+        padding-bottom: 50px !important; /* Add extra bottom padding for scrolling space on very small screens */
+    }
+}

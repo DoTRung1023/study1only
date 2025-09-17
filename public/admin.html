@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Panel</title>
+  <link rel="icon" type="image/png" href="images/web-icon.png">
+  <link rel="shortcut icon" type="image/png" href="images/web-icon.png">
+  <link rel="stylesheet" href="stylesheets/admin.css" />
+  <link rel="stylesheet" href="stylesheets/responsive.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="stylesheets/auth.css">
+  <script src="scripts/admin-auth-check.js"></script>
+  <script src="scripts/admin.js" defer></script>
+</head>
+<body>
+  <!-- Web Logo -->
+  <div style="position: absolute; top: 10px; left: 45px; z-index: 1000; padding: 5px;">
+    <img src="images/web-logo.png" alt="Study1Only Logo" style="height: 50px; width: auto;">
+  </div>
+
+  <div class="app-container">
+    <nav class="top-bar">
+      <div class="nav-group">
+        <div class="search-container">
+          <button type="button" onclick="searchUser()" class="nav-item search-button" title="Search for users by username">
+            <img src="images/search-icon.png" alt="Search Icon" class="nav-icon">
+            <span>Search</span>
+          </button>
+          <input type="text" id="searchInput" placeholder="Search user" class="search-input" title="Type username to search">
+        </div>
+        <button type="button" onclick="addUser()" class="nav-item" title="Add a new user to the system">
+          <img src="images/add-user.png" alt="Add User Icon" class="nav-icon">
+          <span>Add User</span>
+        </button>
+        <button type="button" onclick="logout()" class="nav-item" title="Log out from admin panel">
+          <img src="images/log-out-white.png" alt="Logout Icon" class="nav-icon">
+          <span>Log out</span>
+        </button>
+      </div>
+    </nav>
+
+    <div class="table-container">
+
+    <table class="user-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Avatar</th>
+          <th>Username</th>
+          <th>Password</th>
+          <th>City</th>
+          <th class="sortable" onclick="toggleSort('time')" title="Click to sort users by total study time">
+            Total Time
+              <span class="sort-icon sort-up" id="time-sort-icon">
+                <img src="images/arrow-up.png" alt="Sort" id="time-sort-img" class="sort-arrow">
+              </span>
+          </th>
+          <th class="filter-header" onclick="toggleRegionFilter(event)" title="Click to filter users by region/country">
+            Region
+            <span class="filter-icon">
+              <img src="images/filter.png" alt="Filter regions" class="filter-button">
+            </span>
+          <div id="regionFilterDropdown" class="filter-dropdown">
+            <div class="filter-dropdown-header">
+              <input type="text" id="regionSearchInput" placeholder="Type to search countries..." class="search-input">
+              <div class="selected-info-container">
+                <div id="selectedCountriesInfo"></div>
+              </div>
+              <div class="button-container">
+                <button type="button" onclick="applyRegionFilter()">Apply</button>
+                <button type="button" onclick="clearRegionFilter()">Clear</button>
+              </div>
+            </div>
+            <div class="filter-dropdown-content" id="countryList">
+              <!-- Country options will be populated dynamically -->
+            </div>
+          </div>
+          </th>
+          <th class="sortable" onclick="toggleSort('date')" title="Click to sort users by account creation date">
+            Created Date
+            <span class="sort-icon" id="date-sort-icon">
+              <img src="images/arrow-up.png" alt="Sort" id="date-sort-img" class="sort-arrow">
+            </span>
+          </th>
+          <th>Role</th> <!-- Moved after created date -->
+          <th class="edit-column">Edit</th> <!-- Added class for sticky positioning -->
+        </tr>
+      </thead>
+      <tbody id="userTable">
+        <!-- Rows will be inserted dynamically by admin.js -->
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <!-- Confirmation Modal -->
+  <div id="confirmModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <span class="modal-close" onclick="closeModal()">×</span>
+      <h3>Confirm ?</h3>
+      <p>These user's details will be updated</p>
+      <div class="modal-buttons">
+        <button type="button" onclick="closeModal()" title="Cancel the current operation">Cancel</button>
+        <button type="button" onclick="confirmEditFromModal()" title="Confirm and save changes">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reset Password Modal -->
+  <div id="resetPasswordModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <span class="modal-close" onclick="closeResetModal()">×</span>
+      <h3>Confirm Reset</h3>
+      <p>This will reset the user's password to the default.</p>
+      <div class="modal-buttons">
+        <button type="button" onclick="closeResetModal()" title="Cancel password reset">Cancel</button>
+        <button type="button" onclick="confirmPasswordReset()" title="Reset password to default">Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast" style="display: none;"></div>
+
+</body>
+</html>

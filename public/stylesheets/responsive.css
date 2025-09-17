@@ -1,0 +1,2284 @@
+/* Responsive Design */
+
+/* Base styles for mobile first approach */
+:root {
+  --base-nav-gap: 10px;
+  --nav-item-margin: calc(var(--base-nav-gap) + 2vw); /* Dynamic margin based on viewport width */
+  --timer-width: 250px;
+  --profile-popup-width: 300px;
+  --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-area-inset-top: env(safe-area-inset-top, 0px);
+}
+
+/* Dynamic top bar spacing */
+.top-bar {
+  --min-gap: 10px;
+  --max-gap: 50px;
+  --current-gap: clamp(var(--min-gap), calc(2vw + 8px), var(--max-gap));
+}
+
+.nav-group {
+  display: flex;
+  align-items: center;
+  gap: var(--current-gap);
+  padding: 0 calc(var(--current-gap) / 2);
+}
+
+.nav-item {
+  margin: 0 !important; /* Remove static margins */
+  padding: 10px calc(var(--current-gap) / 3);
+  transition: padding 0.3s ease;
+}
+
+/* Fix for iOS 100vh issue */
+@supports (-webkit-touch-callout: none) {
+  .app-container {
+    height: -webkit-fill-available;
+  }
+
+  body, html {
+    height: -webkit-fill-available;
+  }
+}
+
+/* Small mobile adjustments for two-row layout */
+/* Intermediate mobile sizes - better spacing and sizing */
+@media screen and (min-width: 375px) and (max-width: 390px) {
+  /* Improved spacing for sizes like 381px */
+  #spotify-container {
+    width: 85% !important; /* Slightly wider than default */
+    max-width: 360px !important; /* Increased max-width */
+  }
+
+  #spotify-container #spotify-control {
+    padding: 12px 18px !important; /* More generous padding */
+  }
+
+  #spotify-container #spotify-control .song-info {
+    padding: 10px !important;
+  }
+
+  /* Ultra-specific overrides for 381px range */
+  .app-container .main-content #home-section #spotify-container #spotify-control .song-info {
+    display: flex !important;
+    justify-content: flex-start !important;
+    align-items: center !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .app-container .main-content #home-section #spotify-container #spotify-control .album-art {
+    display: block !important;
+    width: 45px !important;
+    height: 45px !important;
+    margin-right: 12px !important;
+    flex-shrink: 0 !important;
+    opacity: 1 !important;
+    object-fit: cover !important;
+  }
+
+  .app-container .main-content #home-section #spotify-container #spotify-control .controls {
+    justify-content: flex-start !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+  }
+
+  .app-container .main-content #home-section #spotify-container #spotify-control .song-title.overflow,
+  .app-container .main-content #home-section #spotify-container #spotify-control .artist-name.overflow {
+    animation: scrollText var(--scroll-duration) linear infinite !important;
+    animation-delay: 1s !important;
+  }
+}
+
+@media screen and (min-width: 360px) and (max-width: 374px) {
+  /* Better handling for sizes like 363px */
+  #spotify-container {
+    width: 90% !important; /* Wider container */
+    max-width: 350px !important;
+    min-width: 320px !important; /* Ensure minimum width */
+  }
+
+  #spotify-container #spotify-control {
+    padding: 10px 16px !important; /* Better internal padding */
+    min-width: 300px !important; /* Prevent shrinking */
+  }
+
+  #spotify-container #spotify-control .song-info {
+    padding: 8px 12px !important;
+    min-width: 280px !important; /* Ensure enough space */
+  }
+
+  #spotify-container #spotify-control .album-art {
+    width: 42px !important;
+    height: 42px !important;
+    margin-right: 10px !important;
+    flex-shrink: 0 !important;
+  }
+
+  #spotify-container #spotify-control .song-details {
+    width: calc(100% - 55px) !important; /* Account for smaller album art + margin */
+    min-width: 200px !important; /* Ensure text space */
+  }
+
+  #spotify-container #spotify-control .controls {
+    padding: 8px 12px !important;
+    min-width: 280px !important;
+  }
+
+  /* Ultra-specific overrides for 363px range */
+  .app-container .main-content #home-section #spotify-container #spotify-control .song-info {
+    display: flex !important;
+    justify-content: flex-start !important;
+    align-items: center !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .app-container .main-content #home-section #spotify-container #spotify-control .album-art {
+    display: block !important;
+    width: 42px !important;
+    height: 42px !important;
+    margin-right: 10px !important;
+    flex-shrink: 0 !important;
+    opacity: 1 !important;
+    object-fit: cover !important;
+  }
+
+  .app-container .main-content #home-section #spotify-container #spotify-control .song-details {
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: flex-start !important;
+    text-align: left !important;
+    overflow: hidden !important;
+  }
+
+  .app-container .main-content #home-section #spotify-container #spotify-control .controls {
+    justify-content: flex-start !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 5px !important;
+  }
+
+  .app-container .main-content #home-section #spotify-container #spotify-control .song-title.overflow,
+  .app-container .main-content #home-section #spotify-container #spotify-control .artist-name.overflow {
+    animation: scrollText var(--scroll-duration) linear infinite !important;
+    animation-delay: 1s !important;
+  }
+}
+
+@media screen and (max-width: 374px) {
+  /* Slightly smaller elements and tighter spacing for very narrow screens */
+  .nav-group {
+    gap: 15px !important;
+  }
+
+  .nav-group::before {
+    width: 36px !important;
+    height: 36px !important;
+  }
+
+  .nav-item {
+    width: 55px !important;
+    padding: 3px 4px !important;
+  }
+
+  .nav-item span {
+    font-size: 10px !important;
+  }
+
+  .nav-icon {
+    width: 20px !important;
+    height: 20px !important;
+  }
+
+  .profile-avatar {
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px !important;
+    min-height: 20px !important;
+  }
+}
+
+/* Override any conflicting styles - ensure two-row layout is maintained */
+@media screen and (min-width: 375px) and (max-width: 767px) {
+  /* These styles are overridden by the main mobile two-row layout above */
+  /* Keeping this block empty to prevent conflicts */
+}
+
+/* UNIFORM Two-Row Navigation for ALL Mobile Devices (width < 768px) */
+@media screen and (max-width: 767px) {
+  /* Hide the original standalone logo */
+  body > div[style*="position: absolute"]:has(img[src*="web-logo.png"]) {
+    display: none !important;
+  }
+
+  /* Fallback selector for browsers that don't support :has() */
+  body > div[style*="position: absolute"][style*="z-index: 2002"] {
+    display: none !important;
+  }
+
+  /* Two-row uniform layout */
+  .top-bar {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 8px 10px !important;
+    min-height: 85px !important;
+    gap: 10px !important;
+  }
+
+  .nav-group {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+    gap: 20px !important;
+    max-width: 100% !important;
+  }
+
+  /* Add logo as first navigation item */
+  .nav-group::before {
+    content: "" !important;
+    background-image: url('../images/web-logo.png') !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    width: 40px !important;
+    height: 40px !important;
+    margin-right: 2px !important;
+    order: -1 !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Add separator after Home */
+  .nav-item:nth-child(2)::after {
+    content: "" !important;
+    width: 100% !important;
+    height: 1px !important;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent) !important;
+    position: absolute !important;
+    bottom: -5px !important;
+    left: 0 !important;
+  }
+
+  /* First row - Logo, Home, Timer */
+  .nav-item:nth-child(1), /* Home */
+  .nav-item:nth-child(2), /* Timer */
+  .nav-group::before /* Logo */ {
+    order: 1 !important;
+  }
+
+  /* Second row - Profile, Leaderboard, Achievements, StudyStats */
+  .nav-item:nth-child(3), /* Leaderboard */
+  .nav-item:nth-child(4), /* Achievements */
+  .nav-item:nth-child(5), /* StudyStats */
+  .nav-item:nth-child(6) /* Profile */ {
+    order: 2 !important;
+  }
+
+  .nav-item {
+    width: 60px !important;
+    padding: 4px 6px !important;
+    border-radius: 8px !important;
+    margin: 0 !important;
+  }
+
+  .nav-item span {
+    font-size: 11px !important;
+    font-weight: 500 !important;
+  }
+
+  .nav-icon {
+    width: 22px !important;
+    height: 22px !important;
+  }
+
+  .profile-avatar {
+    width: 22px !important;
+    height: 22px !important;
+    min-width: 22px !important;
+    min-height: 22px !important;
+  }
+
+  .search-container {
+    margin-top: 90px !important;
+  }
+
+  .search-button {
+    padding: 8px 12px !important;
+  }
+
+  .search-input {
+    font-size: 14px !important;
+  }
+
+  /* Adjust content positioning for taller navigation bar on mobile */
+  #achievements-section.app-section,
+  #studystats-section.app-section {
+    padding-top: 105px !important; /* Increased from 80px to account for taller nav bar */
+  }
+
+  /* Achievements needs similar handling to leaderboard for different screen sizes */
+  @media screen and (max-width: 541px) {
+    #achievements-section.app-section {
+      padding-top: 143px !important; /* Match leaderboard positioning for very small screens */
+    }
+  }
+
+  @media screen and (min-width: 542px) and (max-width: 768px) {
+    #achievements-section.app-section {
+      padding-top: 108px !important; /* Match leaderboard positioning for medium screens */
+    }
+  }
+
+  /* Leaderboard needs different handling due to its container structure */
+  #leaderboard-section.app-section {
+    padding-top: 105px !important; /* 3px gap for mobile nav bar */
+  }
+
+  /* Adjust leaderboard section padding for different mobile screen sizes */
+  @media screen and (max-width: 541px) {
+    #leaderboard-section.app-section {
+      padding-top: 143px !important; /* 3px gap for very small screens */
+    }
+  }
+
+  @media screen and (min-width: 542px) and (max-width: 768px) {
+    #leaderboard-section.app-section {
+      padding-top: 108px !important; /* 3px gap for medium screens */
+    }
+  }
+
+        /* Study stats popup positioning - JavaScript handles dynamic positioning for mobile */
+  /* CSS fallback removed to prevent conflicts with JavaScript dynamic positioning */
+
+  /* Default popup positioning adjustment for mobile */
+  .nav-popup.default-popup .nav-popup-content {
+    top: 100px !important; /* Push down from taller nav bar */
+    height: calc(100vh - 120px) !important; /* Adjust height accordingly */
+  }
+
+  .nav-popup.default-popup .nav-popup-content[style] {
+    top: 100px !important; /* Override inline styles */
+    height: calc(100vh - 120px) !important; /* Adjust height accordingly */
+  }
+
+  /* Adjusted for different mobile ranges to achieve 3px gap */
+
+  /* Very small mobile - nav bar might be shorter */
+  @media screen and (max-width: 541px) {
+    .nav-popup.default-popup .nav-popup-content {
+      top: 80px !important; /* 3px gap for small screens */
+      height: calc(100vh - 100px) !important; /* Adjust height accordingly */
+    }
+
+    .nav-popup.default-popup .nav-popup-content[style] {
+      top: 80px !important; /* Override inline styles for 3px gap */
+      height: calc(100vh - 100px) !important; /* Adjust height accordingly */
+    }
+  }
+
+  /* Medium mobile/tablet range - nav bar is taller */
+  @media screen and (min-width: 542px) and (max-width: 768px) {
+    .nav-popup.default-popup .nav-popup-content {
+      top: 95px !important; /* 3px gap for medium screens */
+      height: calc(100vh - 115px) !important; /* Adjust height accordingly */
+    }
+
+    .nav-popup.default-popup .nav-popup-content[style] {
+      top: 95px !important; /* Override inline styles for 3px gap */
+      height: calc(100vh - 115px) !important; /* Adjust height accordingly */
+    }
+  }
+
+  /* Fix search and playlist containers for mobile */
+  #search-container,
+  #playlist-container {
+    position: relative !important; /* Change from absolute to relative */
+    top: auto !important; /* Reset top positioning */
+    left: auto !important; /* Reset left positioning */
+    width: 100% !important; /* Full width */
+    height: auto !important; /* Auto height instead of fixed */
+    max-height: 300px !important; /* Maximum height for mobile */
+    margin: 10px 0 !important; /* Add margin for spacing */
+    border-radius: 12px !important;
+    background: black !important;
+    box-sizing: border-box !important;
+    z-index: 1000 !important;
+  }
+
+  #search-content,
+  #playlist-content {
+    height: auto !important; /* Auto height instead of percentage */
+    max-height: 250px !important; /* Maximum scrollable height */
+    overflow-y: auto !important;
+    padding: 10px !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Mobile-specific fixes for sort buttons and search text */
+  #sort-song-container {
+    margin: 0 12px 8px !important;
+    gap: 8px !important;
+    justify-content: center !important;
+  }
+
+  /* Ultra-specific targeting for sort buttons on mobile - maximum specificity */
+  body .app-container .main-content #home-section #spotify-container #sort-song-container .sort-button {
+    width: 120px !important; /* Longer but smaller height as requested */
+    height: 22px !important; /* Even smaller height */
+    padding: 2px 8px !important; /* Very reduced vertical padding */
+    font-size: 10px !important; /* Even smaller font */
+    border-radius: 11px !important; /* Proportional border radius */
+    line-height: 1 !important; /* Tight line height */
+    min-height: 22px !important; /* Override any min-height */
+    max-height: 22px !important; /* Force maximum height */
+  }
+
+  body .app-container .main-content #home-section #spotify-container #sort-song-container .sort-button img {
+    width: 10px !important; /* Even smaller icon */
+    height: 10px !important;
+    margin-right: 3px !important;
+  }
+
+  /* Fix search text alignment */
+  .search-text,
+  .playlist-text {
+    font-size: 13px !important; /* Smaller text for mobile */
+    margin-left: 6px !important;
+    margin-right: 8px !important;
+    display: flex !important;
+    align-items: center !important;
+    white-space: nowrap !important;
+    line-height: 1 !important; /* Consistent line height for better centering */
+  }
+
+
+
+  /* General mobile styles (including larger iPhones) */
+  @media screen and (max-width: 767px) {
+
+  /* Ultra-specific search input targeting - maximum specificity */
+  body .app-container .main-content #home-section #spotify-container #spotify-control .search-box .search-icon {
+    position: absolute !important;
+    left: 15px !important; /* Even more space from left edge */
+    top: 50% !important;
+    transform: translateY(-50%) !important; /* Perfect vertical centering */
+    z-index: 2 !important;
+    margin-left: 0 !important; /* Override base margin-left: 7px */
+    margin-right: 0 !important; /* Override any margin */
+    flex-shrink: 0 !important; /* Maintain base behavior */
+  }
+
+  body .app-container .main-content #home-section #spotify-container #spotify-control .search-box .search-input {
+    line-height: 30px !important; /* Match container height exactly */
+    height: 30px !important; /* Exact height match */
+    padding: 0 !important; /* Remove padding */
+    margin: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    color: white !important;
+    font-size: 14px !important;
+    font-family: 'Fredoka', sans-serif !important;
+    vertical-align: middle !important;
+    position: absolute !important;
+    left: 32px !important; /* Closer to search icon - reduced gap */
+    top: 0 !important;
+    right: 15px !important;
+  }
+
+  body .app-container .main-content #home-section #spotify-container #spotify-control .search-box .search-input::placeholder {
+    line-height: 30px !important; /* Match exact container height */
+    font-size: 14px !important;
+    color: #a7a7a7 !important;
+    font-family: 'Fredoka', sans-serif !important;
+    font-weight: 400 !important;
+    opacity: 0.8 !important;
+    vertical-align: middle !important;
+  }
+
+  /* Ultra-specific targeting for search box on mobile - maximum specificity */
+  body .app-container .main-content #home-section #spotify-container #spotify-control .search-box {
+    margin-left: 12px !important;
+    margin-right: 12px !important;
+    width: calc(100% - 24px) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    height: 30px !important; /* Match base height but force centering */
+    padding: 0 !important; /* Remove padding to prevent misalignment */
+    box-sizing: border-box !important;
+    position: relative !important;
+  }
+
+  /* Fix search section layout */
+  .search-section {
+    display: flex !important;
+    flex-direction: row !important; /* Keep buttons side by side */
+    align-items: center !important;
+    gap: 8px !important;
+    margin-bottom: 8px !important;
+    justify-content: center !important; /* Center the buttons */
+  }
+
+  .search-button,
+  .playlist-button {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 !important; /* Remove horizontal margin to fit better */
+    padding: 6px 8px !important; /* Slightly reduce padding */
+    font-size: 13px !important;
+    flex: 1 !important; /* Equal width for both buttons */
+    max-width: 140px !important; /* Prevent buttons from getting too wide */
+  }
+      #home-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: auto;
+    min-height: 100vh; /* Ensure at least full height */
+    padding: 10px 0; /* Remove horizontal padding for perfect centering */
+    gap: 15px;
+    padding-bottom: max(200px, var(--safe-area-inset-bottom)); /* Significantly increased padding to ensure scrolling access to background section */
+    width: 100%;
+    margin: 0 auto; /* Explicit centering */
+    box-sizing: border-box;
+  }
+
+    /* Timer section */
+    .timer {
+      position: static !important; /* Remove relative positioning */
+      width: 80% !important; /* Match Spotify player width */
+      max-width: 340px !important; /* Match Spotify player max-width */
+      margin: 15px auto !important;
+      text-align: center !important;
+      box-sizing: border-box !important;
+      transform: none !important; /* Remove transform */
+      left: auto !important; /* Remove left positioning */
+      top: auto !important; /* Remove top positioning */
+      right: auto !important; /* Remove right positioning */
+      order: 1; /* Timer first */
+    }
+
+    /* Spotify section - Override absolute positioning */
+    #spotify-container {
+      position: static !important;
+      top: auto !important;
+      left: auto !important;
+      right: auto !important;
+      transform: none !important;
+      width: 80% !important;
+      max-width: 340px !important;
+      margin: 15px auto !important;
+      display: block !important;
+      order: 2; /* Spotify second */
+    }
+
+    /* Spotify control - Make responsive and improve content spacing */
+    #spotify-container #spotify-control {
+      position: static !important;
+      top: auto !important;
+      left: auto !important;
+      right: auto !important;
+      transform: none !important;
+      width: 100% !important;
+      max-width: none !important;
+      margin: 0 !important;
+      padding: 10px 15px !important; /* Increased horizontal padding for better spacing */
+      height: auto !important;
+      min-height: 200px !important;
+      gap: 8px !important; /* Scalable gap between content */
+      box-sizing: border-box !important;
+      overflow: hidden !important; /* Prevent content overflow */
+    }
+
+    /* Style spotify button for mobile when minimized */
+    #spotify-container #spotify-button {
+      position: static !important;
+      top: auto !important;
+      left: auto !important;
+      right: auto !important;
+      transform: none !important;
+      width: 80% !important;
+      max-width: 340px !important;
+      margin: 15px auto !important;
+      box-sizing: border-box !important;
+    }
+
+    /* Improve spacing inside spotify control */
+    #spotify-control .spotify-header {
+      margin-bottom: 8px !important;
+    }
+
+    #spotify-control .search-section {
+      margin-bottom: 8px !important;
+      gap: 8px !important;
+    }
+
+    #spotify-control .search-box {
+      margin: 8px auto !important;
+      width: 95% !important;
+    }
+
+    #spotify-container #spotify-control .song-info {
+      margin: 8px 0 !important;
+      padding: 8px !important;
+      justify-content: flex-start !important; /* Left align song info - keep album art on left */
+      align-items: center !important; /* Keep center alignment for proper album art display */
+      display: flex !important; /* Ensure flex layout */
+      width: 100% !important;
+      box-sizing: border-box !important;
+    }
+
+    #spotify-container #spotify-control .controls {
+      margin-top: 8px !important;
+      gap: 6px !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+      overflow-x: auto !important; /* Allow horizontal scrolling if needed */
+      overflow-y: hidden !important;
+      justify-content: flex-start !important; /* Left align controls instead of space-between */
+      display: flex !important; /* Ensure flex display */
+      align-items: center !important; /* Keep vertical centering */
+      -webkit-overflow-scrolling: touch !important; /* Smooth scrolling */
+      scrollbar-width: none !important; /* Hide scrollbar */
+      -ms-overflow-style: none !important; /* Hide scrollbar for IE */
+    }
+
+    /* Hide scrollbar for webkit browsers in controls */
+    #spotify-control .controls::-webkit-scrollbar {
+      display: none !important;
+    }
+
+    /* Fix Spotify content elements for mobile */
+    #spotify-control .spotify-header {
+      width: 100% !important;
+      box-sizing: border-box !important;
+      overflow: hidden !important;
+    }
+
+    #spotify-control .spotify-text {
+      font-size: 22px !important; /* Slightly smaller on mobile */
+    }
+
+    #spotify-control .search-section {
+      width: 100% !important;
+      box-sizing: border-box !important;
+      flex-wrap: wrap !important;
+    }
+
+    #spotify-control .search-button,
+    #spotify-control .playlist-button {
+      font-size: 13px !important; /* Smaller text for mobile */
+      padding: 2px 8px !important; /* Reduced padding */
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+    }
+
+    #spotify-control .song-info {
+      width: 100% !important;
+      box-sizing: border-box !important;
+      overflow: hidden !important;
+    }
+
+    #spotify-container #spotify-control .song-details {
+      width: calc(100% - 60px) !important; /* Account for album art */
+      overflow: hidden !important;
+      text-align: left !important; /* Left align song text */
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: flex-start !important;
+      align-items: flex-start !important; /* Align items to left */
+    }
+
+    #spotify-container #spotify-control .song-title,
+    #spotify-container #spotify-control .artist-name {
+      width: 100% !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      white-space: nowrap !important;
+      text-align: left !important; /* Force left alignment */
+    }
+
+    /* Ensure album art is visible and properly sized on mobile */
+    #spotify-container #spotify-control .album-art {
+      width: 45px !important;
+      height: 45px !important;
+      margin-right: 12px !important;
+      flex-shrink: 0 !important; /* Prevent shrinking */
+      display: block !important; /* Ensure it's visible */
+      background-color: rgba(255, 255, 255, 0.1) !important;
+      border-radius: 5px !important;
+      object-fit: cover !important; /* Ensure proper image scaling */
+      opacity: 1 !important; /* Force visibility */
+    }
+
+    /* Mobile-specific control button sizing */
+    #spotify-container #spotify-control .control-button {
+      width: 18px !important;
+      height: 18px !important;
+      padding: 8px !important;
+      flex-shrink: 0 !important; /* Prevent button shrinking */
+    }
+
+    #spotify-container #spotify-control .control-button.main-button {
+      width: 36px !important;
+      height: 36px !important;
+      padding: 8px !important;
+      flex-shrink: 0 !important; /* Prevent button shrinking */
+    }
+
+    /* Background section - Override absolute positioning */
+    .background-container {
+      position: relative !important; /* Keep relative for icon positioning */
+      top: auto !important;
+      left: auto !important;
+      right: auto !important;
+      bottom: auto !important;
+      transform: none !important;
+      width: 80% !important; /* Match Spotify player width */
+      max-width: 340px !important; /* Match Spotify player max-width */
+      height: auto !important;
+      margin: 15px auto !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      order: 3; /* Background third */
+    }
+
+    .background-container.minimized {
+      position: relative !important; /* Keep relative for icon positioning */
+      height: auto !important;
+      width: 80% !important; /* Match Spotify player width */
+      max-width: 340px !important; /* Match Spotify player max-width */
+      margin: 15px auto !important;
+      transform: none !important; /* Remove transform */
+      left: auto !important; /* Remove left positioning */
+      top: auto !important; /* Remove top positioning */
+      right: auto !important; /* Remove right positioning */
+      bottom: auto !important; /* Remove bottom positioning */
+    }
+
+    /* Center the background container elements */
+    .background-label {
+      text-align: center;
+      width: 100%;
+    }
+
+    .source {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      gap: 10px;
+    }
+
+    .pexels-search-box {
+      width: 90%;
+      max-width: 320px; /* Increased to match new container size */
+      margin: 10px auto;
+      position: relative; /* Reset position */
+      left: auto; /* Remove left positioning */
+      transform: none; /* Remove transform */
+    }
+
+    /* Center grid layouts for images with internal scrolling */
+    .pexels-results,
+    .album-results {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      padding: 10px;
+      width: 90%;
+      margin: 0 auto;
+      justify-content: center;
+      max-height: 200px; /* Limit height so images scroll within background section */
+      overflow-y: auto; /* Allow scrolling within background section */
+      -webkit-overflow-scrolling: touch; /* Smooth scrolling on mobile */
+    }
+
+    /* Improve scrolling for the entire home section */
+    .main-content {
+      height: 100vh; /* Full viewport height to allow maximum scrolling */
+      overflow-y: auto; /* Allow scrolling */
+      overflow-x: hidden; /* Prevent horizontal scrolling */
+      -webkit-overflow-scrolling: touch;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start; /* Explicit alignment */
+      width: 100%;
+      padding-top: max(95px, calc(var(--safe-area-inset-top) + 95px)); /* Account for nav bar and extra space */
+      padding-bottom: 10px; /* Minimal bottom padding */
+      padding-left: 0; /* No left padding */
+      padding-right: 0; /* No right padding */
+      margin: 0 auto; /* Ensure centering */
+      box-sizing: border-box;
+    }
+
+    /* Center the album sort controls */
+    .album-sort-row {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
+
+    /* Hide open button only when background section is open (not minimized) */
+    .open-button {
+      display: none;
+    }
+
+    /* Show open button when background is minimized */
+    .background-container.minimized .open-button {
+      display: block !important;
+      width: 90%;
+      max-width: 320px; /* Increased to match new container size */
+      margin: 10px auto;
+    }
+
+    /* Fix background settings panel - ensure proper positioning context */
+    .background-container {
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      position: relative !important; /* Ensure absolute positioned children work */
+    }
+
+    /* Ensure background top icons are positioned correctly within container */
+    .background-top-left,
+    .background-top-right {
+      position: absolute !important;
+      z-index: 10 !important;
+      display: block !important;
+      width: 20px !important;
+      height: 20px !important;
+    }
+
+    .background-top-left {
+      left: 5px !important;
+      top: 5px !important;
+    }
+
+    .background-top-right {
+      right: 5px !important;
+      top: 5px !important;
+    }
+
+    /* Hide background icons when background section is minimized */
+    .background-container.minimized .background-top-left,
+    .background-container.minimized .background-top-right {
+      display: none !important;
+    }
+
+    /* Ensure buttons are centered */
+    .timer-controls {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      width: 100%;
+    }
+
+    /* Add iOS-specific padding for notch and home indicator */
+    .top-bar {
+      padding-top: max(10px, var(--safe-area-inset-top));
+      padding-bottom: 10px;
+    }
+
+    .app-container {
+      padding-bottom: max(10px, var(--safe-area-inset-bottom));
+    }
+
+    /* Improve touch targets */
+    .nav-item,
+    button,
+    .timer-button,
+    .leaderboard-tab,
+    .profile-avatar {
+      min-height: 44px; /* iOS minimum touch target size */
+      min-width: 44px;
+    }
+
+    /* Prevent text scaling */
+    body {
+      -webkit-text-size-adjust: 100%;
+    }
+
+    /* Improve scrolling */
+    .leaderboard-data-section,
+    .pexels-results,
+    .album-results {
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* Fix input zoom on iOS */
+    input[type="text"],
+    input[type="password"],
+    select {
+      font-size: 16px; /* Prevents iOS zoom on focus */
+    }
+
+    /* Enhance button feedback */
+    button:active {
+      opacity: 0.7;
+    }
+
+    /* Fix sticky hover effects */
+    .nav-item:hover,
+    button:hover {
+      opacity: 1;
+    }
+
+    /* Improve modal positioning */
+    .modal-content,
+    #profile-popup,
+    .notification-content {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      max-height: 90vh;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+
+
+    /* Enhance form elements */
+    .form-group input,
+    .form-group select,
+    .search-input {
+      height: 44px;
+      padding: 12px;
+      margin-bottom: 16px;
+      border-radius: 8px;
+      -webkit-appearance: none; /* Remove iOS default styling */
+    }
+
+    /* Override for pexels/album search inputs to match their container */
+    .pexels-search-box .search-input,
+    .album-search-box .search-input {
+      height: 30px !important;
+      line-height: 30px !important;
+      padding: 0 !important;
+      margin-bottom: 0 !important;
+      border-radius: 0 !important;
+    }
+
+    /* Fix select2 on iOS */
+    .select2-container .select2-selection--single {
+      height: 44px;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+      line-height: 44px;
+      padding-left: 3px !important; /* Move "Select your country" text to the left */
+    }
+
+    /* Improve table scrolling */
+    .table-container {
+      margin: 0;
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* Enhance leaderboard for mobile */
+    .leaderboard-item {
+      padding: 12px 8px;
+    }
+
+    .leaderboard-item .name {
+      flex: 2;
+    }
+
+    .leaderboard-item .position,
+    .leaderboard-item .total-time {
+      flex: 1;
+    }
+
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+    }
+
+    /* Fix background container */
+    .background-container {
+      bottom: var(--safe-area-inset-bottom);
+    }
+
+    /* Improve achievements display */
+    .achievement-list {
+      grid-template-columns: 1fr;
+      gap: 12px;
+      padding: 12px;
+    }
+
+    /* Fix study stats display */
+    .studystats-container {
+      padding: 12px;
+    }
+
+    /* Enhance buttons */
+    .btn {
+      padding: 12px 20px;
+      margin: 8px 0;
+      border-radius: 8px;
+    }
+
+    .nav-item {
+      width: 100%;
+      margin: 5px 0;
+    }
+
+    .table-container {
+      margin: 10px;
+      overflow-x: auto;
+    }
+
+    .user-table {
+      font-size: 14px;
+    }
+
+    .user-table th,
+    .user-table td {
+      padding: 8px;
+      min-width: 100px;
+    }
+
+    .user-table th:nth-child(4),
+    .user-table td:nth-child(4),
+    .user-table th:nth-child(5),
+    .user-table td:nth-child(5) {
+      display: none; /* Hide password and address columns on mobile */
+    }
+
+      .filter-dropdown {
+    width: 280px;
+    right: -100px;
+  }
+
+  /* Profile popup mobile enhancements - high specificity to override base styles */
+  body #profile-popup .profile-header {
+    margin-bottom: 25px !important; /* More gap between header and buttons */
+    align-items: flex-end !important; /* Align username to bottom level */
+  }
+
+  body #profile-popup .profile-header img {
+    margin-right: 15px !important; /* More space between avatar and username */
+  }
+
+  body #profile-popup .profile-header h3 {
+    margin-bottom: 0 !important; /* Align with nav text level - no bottom margin */
+    line-height: 1 !important; /* Tight line height for precise alignment */
+  }
+
+  /* Update Personal Details Page Mobile Responsiveness */
+  body {
+    padding: 10px !important; /* Add body padding to prevent cutoff */
+    margin: 0 !important; /* Remove default margins */
+    box-sizing: border-box !important;
+    overflow-x: hidden !important; /* Prevent horizontal scrolling */
+  }
+
+  .form-container {
+    width: 100% !important; /* Full width within body padding */
+    max-width: 380px !important; /* Slightly smaller max width */
+    padding: 10px !important; /* Reduced padding for mobile */
+    margin: 0 auto !important; /* Ensure proper centering */
+    box-sizing: border-box !important; /* Include padding in width calculation */
+  }
+
+  .form-container h1 {
+    font-size: 32px !important; /* Smaller title on mobile */
+    margin-bottom: 30px !important; /* Reduced margin */
+  }
+
+  .form-group {
+    width: 100% !important; /* Full width of container */
+    margin-bottom: 20px !important; /* Reduced spacing between fields */
+    box-sizing: border-box !important; /* Include padding in width calculation */
+  }
+
+  .form-control {
+    padding: 9px 11px !important; /* More compact padding */
+    font-size: 14px !important; /* Smaller font for mobile */
+    border-radius: 18px !important; /* Slightly smaller border radius */
+    width: 100% !important; /* Ensure full width */
+    box-sizing: border-box !important; /* Include padding in width calculation */
+  }
+
+  /* Select2 mobile adjustments */
+  .select2-container {
+    width: 100% !important; /* Full width on mobile */
+  }
+
+  .select2-container .select2-selection--single {
+    height: 40px !important; /* More compact height */
+    padding: 0 11px !important; /* Consistent with form controls */
+    border-radius: 18px !important; /* Match form control border radius */
+  }
+
+  .select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 40px !important; /* Match new height */
+    padding-left: 3px !important; /* Move text to the left - consistent with main mobile rule */
+    font-size: 14px !important; /* Match form control font size */
+  }
+
+  /* Button group mobile adjustments */
+  .button-group {
+    flex-direction: row !important; /* Keep buttons side by side on mobile */
+    gap: 10px !important; /* Smaller gap between buttons */
+    margin-top: 25px !important; /* Consistent spacing */
+    justify-content: center !important; /* Center the buttons */
+  }
+
+  .btn {
+    flex: 1 !important; /* Equal width for both buttons */
+    max-width: 140px !important; /* Limit maximum width */
+    margin: 0 !important; /* Remove individual margins */
+    padding: 12px 16px !important; /* Slightly reduced horizontal padding */
+    font-size: 15px !important; /* Slightly smaller font for better fit */
+    border-radius: 30px !important; /* More rounded buttons */
+  }
+
+  .btn-cancel,
+  .btn-confirm {
+    margin-left: 0 !important; /* Remove desktop margins */
+    margin-right: 0 !important; /* Remove desktop margins */
+  }
+
+  /* Modal mobile adjustments */
+  .modal-content {
+    width: 90% !important; /* Use more screen width on mobile */
+    max-width: 350px !important; /* Maximum width for mobile */
+    margin: 20% auto !important; /* Better centering on mobile */
+    padding: 20px 15px !important; /* Adjusted padding */
+  }
+
+  .modal-buttons {
+    flex-direction: column !important; /* Stack modal buttons vertically */
+    gap: 8px !important; /* Smaller gap */
+  }
+
+  .modal-buttons button {
+    width: 100% !important; /* Full width modal buttons */
+    padding: 10px 20px !important; /* Better touch targets */
+  }
+
+
+
+
+
+    /* Login page */
+    html, body {
+      margin: 0 !important;
+      padding: 0 !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+    }
+
+    .desktop {
+      margin: 0 !important;
+      padding: 0 !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+    }
+
+    .desktop .main-container {
+      flex-direction: column;
+      height: auto;
+      min-height: -webkit-fill-available;
+      padding-bottom: var(--safe-area-inset-bottom);
+      margin: 0 !important;
+      padding: 0 !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+    }
+
+    .desktop .overlap {
+      width: 100% !important;
+      min-width: 100% !important;
+      margin: 0 !important;
+      padding: 2rem 1rem;
+      border-radius: 0 !important;
+      padding-top: max(2rem, var(--safe-area-inset-top));
+      box-sizing: border-box !important;
+      flex: 1 1 100% !important;
+    }
+
+    .desktop .overlap img {
+      height: 120px !important;
+      margin-bottom: 1rem;
+    }
+
+    .desktop .text-wrapper-2 {
+      font-size: 2rem !important;
+      margin-bottom: 1rem !important;
+    }
+
+    .desktop .text-wrapper {
+      font-size: 1.2rem !important;
+    }
+
+    .desktop .right-section {
+      width: 100% !important;
+      min-width: 100% !important;
+      margin: 0 !important;
+      padding: 1.5rem 1rem;
+      border-radius: 0 !important;
+      padding-bottom: max(1.5rem, var(--safe-area-inset-bottom));
+      box-sizing: border-box !important;
+      flex: 1 1 100% !important;
+    }
+
+    .desktop .input-wrapper {
+      width: 100%;
+    }
+
+    .desktop .input-group {
+      height: 44px;
+    }
+
+    .desktop .input-group input {
+      font-size: 16px;
+      height: 44px;
+      padding: 12px;
+      -webkit-appearance: none;
+      border-radius: 8px;
+    }
+
+    .desktop .toggle-password {
+      height: 44px;
+      width: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Signup page */
+    .container {
+      width: 100%;
+      margin: 0;
+      padding: 16px;
+      padding-top: max(16px, var(--safe-area-inset-top));
+      padding-bottom: max(16px, var(--safe-area-inset-bottom));
+      min-height: -webkit-fill-available;
+    }
+
+    .header h1 {
+      font-size: 1.8rem;
+      margin: 1rem 0;
+    }
+
+    .form-container {
+      padding: 16px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group input,
+    .form-group .select2-container {
+      width: 100% !important;
+      height: 44px;
+      border-radius: 35px !important; /* Increased border radius for mobile */
+    }
+
+    /* Avatar popup button adjustments for mobile */
+    .avatar-popup .button-group {
+      flex-direction: row !important; /* Keep buttons side by side */
+      gap: 8px !important; /* Smaller gap between buttons */
+      padding-bottom: var(--safe-area-inset-bottom);
+      justify-content: center !important; /* Center the buttons */
+    }
+
+    .avatar-popup .button-group .btn {
+      width: 90px !important; /* Smaller width */
+      height: 36px !important; /* Smaller height */
+      font-size: 13px !important; /* Smaller font */
+      padding: 0 !important; /* Remove extra padding */
+    }
+
+    /* Other modals can still use vertical layout */
+    .button-group:not(.avatar-popup .button-group) {
+      flex-direction: column;
+      gap: 12px;
+      padding-bottom: var(--safe-area-inset-bottom);
+    }
+
+    .button-group:not(.avatar-popup .button-group) button {
+      width: 100%;
+      height: 44px;
+    }
+
+    /* Modal improvements for iOS */
+    .modal {
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .modal-content,
+    .notification-content {
+      width: 90%;
+      max-width: 350px;
+      margin: 20px auto;
+      padding: 16px;
+      border-radius: 12px;
+    }
+
+    .modal-buttons button {
+      height: 44px;
+      padding: 0 20px;
+      border-radius: 8px;
+    }
+
+    /* Fix for iOS momentum scrolling */
+    .select2-results__options {
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* Force stronger overrides for Spotify layout */
+    .app-container .main-content #home-section #spotify-container #spotify-control .controls {
+      justify-content: flex-start !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 6px !important;
+      overflow-x: auto !important;
+      -webkit-overflow-scrolling: touch !important;
+      scrollbar-width: none !important;
+      -ms-overflow-style: none !important;
+    }
+
+    .app-container .main-content #home-section #spotify-container #spotify-control .song-info {
+      display: flex !important;
+      justify-content: flex-start !important;
+      align-items: center !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+    }
+
+    .app-container .main-content #home-section #spotify-container #spotify-control .album-art {
+      display: block !important;
+      width: 45px !important;
+      height: 45px !important;
+      margin-right: 12px !important;
+      flex-shrink: 0 !important;
+      opacity: 1 !important;
+      object-fit: cover !important;
+      background-color: rgba(255, 255, 255, 0.1) !important;
+      border-radius: 5px !important;
+    }
+
+    .app-container .main-content #home-section #spotify-container #spotify-control .song-details {
+      flex: 1 !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: center !important;
+      align-items: flex-start !important;
+      text-align: left !important;
+      overflow: hidden !important;
+    }
+
+      .app-container .main-content #home-section #spotify-container #spotify-control .song-title,
+  .app-container .main-content #home-section #spotify-container #spotify-control .artist-name {
+    width: 100% !important;
+    text-align: left !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  /* Mobile scrolling animation for overflowing text - no hover required */
+  .app-container .main-content #home-section #spotify-container #spotify-control .song-title.overflow,
+  .app-container .main-content #home-section #spotify-container #spotify-control .artist-name.overflow {
+    animation: scrollText var(--scroll-duration) linear infinite !important;
+    animation-delay: 1s !important; /* Start after 1 second */
+  }
+
+      .app-container .main-content #home-section #spotify-container #spotify-control .control-button {
+    flex-shrink: 0 !important;
+  }
+
+  /* Force display of the 'Premium Required' state properly on mobile */
+  .app-container .main-content #home-section #spotify-container #spotify-control div:has(+ .controls) {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+  }
+  }
+
+  /* Additional adjustments for very small screens */
+  @media screen and (max-width: 374px) {
+    #home-section {
+      padding: 8px 0; /* Remove horizontal padding for perfect centering */
+      gap: 15px; /* Increase gap to prevent overlap */
+      padding-bottom: max(250px, var(--safe-area-inset-bottom)); /* Extra padding for very small screens */
+      min-height: 100vh; /* Full height for proper scrolling */
+      margin: 0 auto; /* Explicit centering */
+      box-sizing: border-box;
+    }
+
+    .timer {
+      width: 90% !important; /* Match Spotify player width on very small screens */
+      max-width: 300px !important; /* Match Spotify player max-width on very small screens */
+      margin: 20px auto !important; /* Increase margin for better separation */
+      position: static !important; /* Force static positioning */
+      transform: none !important; /* Remove any transforms */
+      left: auto !important;
+      top: auto !important;
+      right: auto !important;
+      bottom: auto !important;
+      z-index: auto !important; /* Reset z-index */
+    }
+
+    .background-container {
+      width: 90% !important; /* Match Spotify player width on very small screens */
+      max-width: 300px !important; /* Match Spotify player max-width on very small screens */
+      margin: 20px auto !important; /* Increase margin for better separation */
+      position: relative !important; /* Keep relative for icon positioning */
+      transform: none !important; /* Remove any transforms */
+      left: auto !important;
+      top: auto !important;
+      right: auto !important;
+      bottom: auto !important;
+      z-index: auto !important; /* Reset z-index */
+    }
+
+    /* Spotify gets extra width even on very small screens */
+    #spotify-container,
+    #spotify-container #spotify-control,
+    #spotify-container #spotify-button {
+      width: 90% !important;
+      max-width: 300px !important;
+      margin: 20px auto !important;
+      position: static !important;
+      transform: none !important;
+      left: auto !important;
+      top: auto !important;
+      z-index: auto !important;
+    }
+
+    /* Fix overflow for very small screens */
+    #spotify-container #spotify-control {
+      padding: 8px 10px !important;
+      box-sizing: border-box !important;
+      overflow: hidden !important;
+    }
+
+    #spotify-control .spotify-text {
+      font-size: 20px !important; /* Even smaller for very small screens */
+    }
+
+    #spotify-control .search-button,
+    #spotify-control .playlist-button {
+      font-size: 12px !important;
+      padding: 2px 6px !important;
+    }
+
+    #spotify-container #spotify-control .control-button {
+      width: 16px !important;
+      height: 16px !important;
+      padding: 6px !important;
+      flex-shrink: 0 !important;
+    }
+
+    #spotify-container #spotify-control .control-button.main-button {
+      width: 32px !important;
+      height: 32px !important;
+      padding: 6px !important;
+      flex-shrink: 0 !important;
+    }
+
+    /* Left-align controls for very small screens */
+    #spotify-container #spotify-control .controls {
+      gap: 4px !important; /* Smaller gap for very small screens */
+      justify-content: flex-start !important; /* Left align controls */
+      display: flex !important;
+      align-items: center !important;
+      overflow-x: auto !important;
+      -webkit-overflow-scrolling: touch !important;
+    }
+
+    /* Left-align song info for very small screens */
+    #spotify-container #spotify-control .song-info {
+      justify-content: flex-start !important;
+      align-items: center !important; /* Keep center alignment for proper album art display */
+      display: flex !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+    }
+
+    /* Ensure album art is visible on very small screens */
+    #spotify-container #spotify-control .album-art {
+      width: 40px !important;
+      height: 40px !important;
+      margin-right: 10px !important;
+      flex-shrink: 0 !important;
+      display: block !important;
+      object-fit: cover !important;
+      opacity: 1 !important;
+    }
+
+    #spotify-container #spotify-control .song-details {
+      text-align: left !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: flex-start !important;
+      align-items: flex-start !important;
+    }
+
+    /* Ensure proper stacking order: Timer → Spotify → Background */
+    .timer {
+      order: 1;
+    }
+
+    #spotify-container {
+      order: 2;
+    }
+
+    .background-container {
+      order: 3;
+    }
+
+    /* Position background icons properly within background section on very small screens */
+    .background-container .background-top-left,
+    .background-container .background-top-right {
+      position: absolute !important;
+      width: 16px !important;
+      height: 16px !important;
+      z-index: 15 !important;
+      display: block !important;
+    }
+
+    .background-container .background-top-left {
+      left: 4px !important;
+      top: 4px !important;
+    }
+
+    .background-container .background-top-right {
+      right: 4px !important;
+      top: 4px !important;
+    }
+
+    /* Ensure background container has proper positioning context on very small screens */
+    .background-container {
+      position: relative !important; /* Keep relative for icon positioning */
+      width: 85% !important;
+      max-width: 240px !important;
+      margin: 20px auto !important;
+      left: auto !important;
+      top: auto !important;
+      right: auto !important;
+      bottom: auto !important;
+      transform: none !important;
+    }
+
+    .pexels-search-box {
+      max-width: 280px; /* Increased to match new container size */
+    }
+
+    /* Hide open button only when background section is open (not minimized) */
+    .open-button {
+      display: none;
+    }
+
+    /* Show open button when background is minimized on very small screens */
+    .background-container.minimized .open-button {
+      display: block !important;
+      max-width: 280px; /* Increased to match new container size */
+      width: 90%; /* Match container width */
+      margin: 10px auto;
+    }
+
+    /* Hide background icons when background section is minimized on very small screens */
+    .background-container.minimized .background-top-left,
+    .background-container.minimized .background-top-right {
+      display: none !important;
+    }
+
+      .pexels-results,
+  .album-results {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    padding: 8px;
+    width: 90%;
+  }
+
+  /* Fix search and playlist containers for small mobile screens */
+  #search-container,
+  #playlist-container {
+    position: relative !important; /* Change from absolute to relative */
+    top: auto !important; /* Reset top positioning */
+    left: auto !important; /* Reset left positioning */
+    width: 100% !important; /* Full width */
+    height: auto !important; /* Auto height instead of fixed */
+    max-height: 250px !important; /* Smaller height for very small screens */
+    margin: 8px 0 !important;
+    border-radius: 10px !important;
+    background: black !important;
+    box-sizing: border-box !important;
+  }
+
+  #search-content,
+  #playlist-content {
+    height: auto !important;
+    max-height: 200px !important; /* Smaller scrollable height */
+    overflow-y: auto !important;
+    padding: 8px !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Sort button adjustments for small mobile */
+  .sort-button {
+    width: 95px !important;
+    padding: 3px 7px !important;
+    font-size: 12px !important;
+  }
+
+  .sort-button img {
+    width: 13px !important;
+    height: 13px !important;
+    margin-right: 3px !important;
+  }
+
+  /* Force stronger overrides for Spotify layout on very small screens */
+  .app-container .main-content #home-section #spotify-container #spotify-control .controls {
+    justify-content: flex-start !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  .app-container .main-content #home-section #spotify-container #spotify-control .song-info {
+    display: flex !important;
+    justify-content: flex-start !important;
+    align-items: center !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .app-container .main-content #home-section #spotify-container #spotify-control .album-art {
+    display: block !important;
+    width: 40px !important;
+    height: 40px !important;
+    margin-right: 10px !important;
+    flex-shrink: 0 !important;
+    opacity: 1 !important;
+    object-fit: cover !important;
+  }
+
+  .app-container .main-content #home-section #spotify-container #spotify-control .song-details {
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: flex-start !important;
+    text-align: left !important;
+    overflow: hidden !important;
+  }
+
+  /* Mobile scrolling animation for overflowing text on very small screens */
+  .app-container .main-content #home-section #spotify-container #spotify-control .song-title.overflow,
+  .app-container .main-content #home-section #spotify-container #spotify-control .artist-name.overflow {
+    animation: scrollText var(--scroll-duration) linear infinite !important;
+    animation-delay: 1s !important; /* Start after 1 second */
+  }
+  }
+
+  /* Ensure proper layout for landscape mode */
+  @media screen and (max-width: 767px) and (orientation: landscape) {
+    #home-section {
+      padding: 10px 0; /* Remove horizontal padding for perfect centering */
+      padding-bottom: max(150px, var(--safe-area-inset-bottom)); /* Ensure scrolling in landscape too */
+      min-height: 100vh;
+      margin: 0 auto; /* Explicit centering */
+      box-sizing: border-box;
+    }
+
+    .main-content {
+      height: 100vh; /* Allow full scrolling in landscape */
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .timer,
+    #spotify-container,
+    .background-container {
+      max-width: 300px;
+      width: 75%;
+    }
+
+    .pexels-search-box,
+    .open-button {
+      max-width: 280px;
+    }
+  }
+
+  /* Medium devices (tablets, 768px to 1023px) */
+  @media screen and (min-width: 768px) and (max-width: 1023px) {
+    .top-bar {
+      --current-gap: clamp(15px, 4vw, 30px);
+    }
+
+    .nav-item {
+      padding: 10px 8px;
+    }
+
+    .nav-item span {
+      font-size: 14px;
+    }
+
+    .nav-icon {
+      width: 28px;
+      height: 28px;
+    }
+
+    .timer {
+      width: var(--timer-width);
+    }
+
+    .pexels-results,
+    .album-results {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      padding: 15px;
+    }
+
+    .leaderboard-container {
+      width: 90%;
+      margin: 20px auto;
+    }
+
+    .achievements-container {
+      width: 90%;
+      margin: 20px auto;
+    }
+
+    .studystats-container {
+      width: 90%;
+      margin: 20px auto;
+      padding: 20px;
+    }
+
+    .desktop .main-container {
+      height: 100vh;
+    }
+
+    .desktop .overlap {
+      padding: 2rem;
+    }
+
+    .desktop .overlap img {
+      height: 200px !important;
+    }
+
+    .desktop .text-wrapper-2 {
+      font-size: 3rem !important;
+    }
+
+    .desktop .text-wrapper {
+      font-size: 1.6rem !important;
+    }
+
+    .desktop .right-section {
+      padding: 2rem;
+    }
+
+    .desktop .input-wrapper {
+      width: 85%;
+    }
+
+    .container {
+      width: 80%;
+      margin: 30px auto;
+      padding: 20px;
+    }
+
+    .header h1 {
+      font-size: 2.5rem;
+    }
+
+    .form-container {
+      padding: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .button-group {
+      gap: 15px;
+    }
+
+    .modal-content,
+    .notification-content {
+      width: 80%;
+      max-width: 500px;
+    }
+
+    .table-container {
+      margin: 20px;
+    }
+
+    .user-table {
+      font-size: 15px;
+    }
+
+    .user-table th,
+    .user-table td {
+      padding: 10px;
+    }
+
+    .filter-dropdown {
+      width: 320px;
+      right: -50px;
+    }
+  }
+}
+
+/* Large devices (desktops, 1024px to 1439px) */
+@media screen and (min-width: 1024px) and (max-width: 1439px) {
+  .top-bar {
+    --current-gap: clamp(20px, 5vw, 40px);
+  }
+
+  .nav-item {
+    padding: 10px 12px;
+  }
+
+  .nav-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .timer {
+    width: var(--timer-width);
+  }
+
+  .pexels-results,
+  .album-results {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    padding: 20px;
+  }
+
+  .leaderboard-container {
+    width: 80%;
+    margin: 30px auto;
+  }
+
+  .achievements-container {
+    width: 80%;
+    margin: 30px auto;
+  }
+
+  .studystats-container {
+    width: 80%;
+    margin: 30px auto;
+    padding: 30px;
+  }
+}
+
+/* Extra large devices (large desktops, 1440px and up) */
+@media screen and (min-width: 1440px) {
+  .top-bar {
+    --current-gap: clamp(30px, 6vw, 50px);
+  }
+
+  .nav-item {
+    padding: 10px 16px;
+  }
+
+  .timer {
+    width: var(--timer-width);
+  }
+
+  .pexels-results,
+  .album-results {
+    grid-template-columns: repeat(5, 1fr);
+  }
+
+  .leaderboard-container {
+    width: 70%;
+    margin: 30px auto;
+  }
+
+  .achievements-container {
+    width: 70%;
+    margin: 30px auto;
+  }
+
+  .studystats-container {
+    width: 70%;
+    margin: 30px auto;
+    padding: 30px;
+  }
+}
+
+/* Ensure content is accessible when keyboard is visible on mobile */
+@media screen and (max-height: 600px) {
+  .timer {
+    position: relative;
+    top: 10px;
+    margin: 0 auto;
+  }
+
+  .background-container {
+    position: relative;
+    margin-top: 20px;
+  }
+}
+
+/* Print styles */
+@media print {
+  .top-bar,
+  .background-container,
+  .timer-controls,
+  #spotify-container {
+    display: none !important;
+  }
+
+  body {
+    background: white !important;
+    color: black !important;
+  }
+
+  .timer {
+    background: none !important;
+    border: 1px solid #ccc;
+    color: black !important;
+  }
+}
+
+/* Ensure table is scrollable horizontally on all devices */
+.table-container {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Make edit column sticky on all screen sizes */
+.edit-column {
+  position: sticky;
+  right: 0;
+  background: inherit;
+  z-index: 1;
+}
+
+/* Ultra-specific styles for screens around 315px */
+/* Enhanced border radius for signup inputs - Larger small screens */
+@media screen and (max-width: 600px) {
+  .form-group input {
+    border-radius: 32px !important; /* More border radius for screens up to 600px */
+  }
+}
+
+/* Enhanced border radius for signup inputs - Medium small screens */
+@media screen and (max-width: 550px) {
+  .form-group input {
+    border-radius: 38px !important; /* Even more border radius for screens up to 550px */
+  }
+}
+
+/* Enhanced border radius for signup inputs - Specific for 543px and around */
+@media screen and (max-width: 543px) {
+  .form-group input {
+    border-radius: 42px !important; /* High border radius for 543px screens */
+  }
+}
+
+/* Enhanced border radius and other fixes for small screens (331px to 480px) */
+@media screen and (max-width: 480px) {
+  .form-group input {
+    border-radius: 45px !important; /* Very high border radius for small screens */
+  }
+
+  .no-results-spotify {
+    padding: 15px 10px 0px 10px !important; /* Reduce side padding for small screens */
+    font-size: 16px !important; /* Slightly smaller font */
+    white-space: normal !important; /* Allow text wrapping */
+    word-wrap: break-word !important; /* Break long words if needed */
+    overflow-wrap: break-word !important; /* Better word breaking support */
+    line-height: 1.4 !important; /* Better readability */
+  }
+
+  .search-error {
+    padding: 15px 10px 0px 10px !important; /* Same fix for search errors */
+    font-size: 14px !important; /* Proportionally smaller */
+    white-space: normal !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    line-height: 1.4 !important;
+  }
+}
+
+@media screen and (max-width: 330px) {
+  /* Ultra-strong overrides for Spotify layout on extremely small screens */
+  body .app-container .main-content #home-section #spotify-container #spotify-control .song-info {
+    display: flex !important;
+    justify-content: flex-start !important;
+    align-items: center !important;
+    width: 100% !important;
+    min-width: 280px !important; /* Ensure minimum width */
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+    padding: 5px !important;
+  }
+
+  body .app-container .main-content #home-section #spotify-container #spotify-control .album-art {
+    display: block !important;
+    width: 35px !important;
+    height: 35px !important;
+    margin-right: 8px !important;
+    flex-shrink: 0 !important;
+    opacity: 1 !important;
+    object-fit: cover !important;
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    border-radius: 4px !important;
+    min-width: 35px !important; /* Prevent shrinking */
+  }
+
+  body .app-container .main-content #home-section #spotify-container #spotify-control .song-details {
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: flex-start !important;
+    text-align: left !important;
+    overflow: hidden !important;
+    width: calc(100% - 50px) !important; /* Account for album art + margin */
+    min-width: 200px !important; /* Ensure enough space for text */
+  }
+
+  body .app-container .main-content #home-section #spotify-container #spotify-control .song-title,
+  body .app-container .main-content #home-section #spotify-container #spotify-control .artist-name {
+    width: 100% !important;
+    text-align: left !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    font-size: 13px !important; /* Slightly smaller text for very small screens */
+  }
+
+  /* Mobile scrolling animation for overflowing text - no hover required */
+  body .app-container .main-content #home-section #spotify-container #spotify-control .song-title.overflow,
+  body .app-container .main-content #home-section #spotify-container #spotify-control .artist-name.overflow {
+    animation: scrollText var(--scroll-duration) linear infinite !important;
+    animation-delay: 1s !important; /* Start after 1 second */
+  }
+
+  body .app-container .main-content #home-section #spotify-container #spotify-control .controls {
+    justify-content: flex-start !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 3px !important; /* Even smaller gap for very small screens */
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    min-width: 280px !important; /* Ensure minimum width */
+    padding: 5px !important;
+  }
+
+  /* Ensure Spotify container itself has minimum width */
+  #spotify-container {
+    min-width: 290px !important;
+    width: 95% !important;
+    max-width: 320px !important;
+  }
+
+  #spotify-container #spotify-control {
+    min-width: 280px !important;
+    width: 100% !important;
+    padding: 8px !important;
+  }
+
+  /* Fix search and playlist containers for ultra-small screens */
+  #search-container,
+  #playlist-container {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    max-height: 200px !important; /* Even smaller height for ultra-small screens */
+    margin: 5px 0 !important;
+    border-radius: 8px !important;
+    background: black !important;
+    box-sizing: border-box !important;
+  }
+
+  #search-content,
+  #playlist-content {
+    height: auto !important;
+    max-height: 150px !important; /* Smaller scrollable height */
+    overflow-y: auto !important;
+    padding: 6px !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Small screen sort button adjustments */
+  .sort-button {
+    width: 85px !important; /* Even smaller for ultra-small screens */
+    padding: 3px 6px !important;
+    font-size: 11px !important;
+  }
+
+  .sort-button img {
+    width: 12px !important;
+    height: 12px !important;
+    margin-right: 3px !important;
+  }
+
+  /* Update Personal Details Page - Ultra Small Mobile */
+  body {
+    padding: 5px !important; /* Minimal body padding to prevent cutoff */
+    box-sizing: border-box !important;
+  }
+
+  .form-container {
+    width: 100% !important; /* Full width within body padding */
+    max-width: none !important; /* Remove max width restriction for tiny screens */
+    padding: 8px !important; /* Minimal padding */
+    margin: 0 auto !important; /* Ensure proper centering */
+    box-sizing: border-box !important; /* Include padding in width calculation */
+  }
+
+  .form-container h1 {
+    font-size: 28px !important; /* Even smaller title */
+    margin-bottom: 20px !important; /* Reduced margin */
+  }
+
+  .form-group {
+    margin-bottom: 15px !important; /* Tighter spacing */
+  }
+
+  .form-control {
+    padding: 8px 10px !important; /* Smaller padding for tiny screens */
+    font-size: 14px !important; /* Smaller font */
+  }
+
+  .select2-container .select2-selection--single {
+    height: 38px !important; /* Smaller height for tiny screens */
+  }
+
+  .select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 38px !important; /* Match smaller height */
+    padding-left: 10px !important; /* Smaller padding */
+    font-size: 14px !important; /* Match form control font */
+  }
+
+  .btn {
+    padding: 10px 15px !important; /* Smaller padding for better fit */
+    font-size: 15px !important; /* Slightly smaller font */
+  }
+
+  .modal-content {
+    width: 95% !important; /* Use even more screen width */
+    max-width: 300px !important; /* Very small max width */
+    margin: 15% auto !important; /* Better positioning */
+    padding: 15px 10px !important; /* Minimal padding */
+  }
+
+  /* Make form controls even more compact for ultra-small screens */
+  .form-control {
+    padding: 6px 8px !important; /* Even smaller padding */
+    font-size: 13px !important; /* Smaller font */
+    border-radius: 15px !important; /* Smaller border radius */
+  }
+
+  .select2-container .select2-selection--single {
+    height: 35px !important; /* Even smaller height */
+    border-radius: 15px !important; /* Smaller border radius */
+  }
+
+  .select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 35px !important; /* Match even smaller height */
+    padding-left: 8px !important; /* Even smaller padding */
+    font-size: 13px !important; /* Smaller font to match form controls */
+  }
+
+  /* Compact labels and helper text */
+  label {
+    font-size: 13px !important; /* Smaller label text */
+    margin-bottom: 3px !important; /* Tighter spacing */
+  }
+
+  .form-helper {
+    font-size: 11px !important; /* Very small helper text */
+    margin-top: 2px !important; /* Minimal spacing */
+  }
+
+  /* Compact buttons for ultra-small screens */
+  .btn {
+    padding: 8px 12px !important; /* Even smaller padding */
+    font-size: 14px !important; /* Smaller font */
+    border-radius: 20px !important; /* Proportional border radius */
+  }
+
+  /* Enhanced border radius and other fixes for ultra-small screens */
+  .form-group input {
+    border-radius: 50px !important; /* Maximum border radius for ultra-small screens */
+  }
+
+  .no-results-spotify {
+    padding: 10px 5px 0px 5px !important; /* Much smaller padding to prevent cutoff */
+    font-size: 14px !important; /* Smaller font for better fit */
+    white-space: normal !important; /* Allow text wrapping */
+    word-wrap: break-word !important; /* Break long words if needed */
+    overflow-wrap: break-word !important; /* Better word breaking support */
+    line-height: 1.3 !important; /* Compact line height */
+  }
+
+  .search-error {
+    padding: 10px 5px 0px 5px !important; /* Same fix for search errors */
+    font-size: 13px !important; /* Slightly smaller than no-results */
+    white-space: normal !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    line-height: 1.3 !important;
+  }
+}
+
+/* Ensure minimum spacing when screen gets very narrow */
+@media screen and (max-width: 320px) {
+  /* Ultra-small logo for very narrow screens */
+  body > div[style*="position: absolute"][style*="web-logo.png"] {
+    top: 2px !important;
+    left: 2px !important;
+  }
+
+  body > div[style*="position: absolute"][style*="web-logo.png"] img {
+    height: 32px !important;
+  }
+
+  .top-bar {
+    --current-gap: 6px;
+    padding-left: 35px !important; /* Minimal space for logo */
+  }
+
+  .nav-item {
+    padding: 8px 3px;
+    margin: 0 2px !important; /* Minimum spacing */
+  }
+
+  .nav-item span {
+    font-size: 9px !important;
+  }
+
+  .nav-icon {
+    width: 16px !important;
+    height: 16px !important;
+  }
+
+  .profile-avatar {
+    width: 22px !important;
+    height: 22px !important;
+    min-width: 22px !important;
+    min-height: 22px !important;
+  }
+}

@@ -1,0 +1,12 @@
+/* Hide content initially until authentication is verified */
+body {
+    display: none;
+}
+
+/* Ensure proper centering when body is shown */
+body.authenticated {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    min-height: 100vh !important;
+}

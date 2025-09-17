@@ -1,0 +1,80 @@
+.stats-container {
+  padding: 8px 20px 20px 20px; /* Minimal top padding for content spacing */
+  background: rgba(48, 43, 43, 0.5);
+  border-radius: 40px;
+  width: 240px;
+  position: relative;
+  margin: 0; /* Ensure no margins */
+  box-sizing: border-box; /* Include padding in width calculation */
+}
+
+.stats-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  width: 100%;
+}
+
+.stats-header .stat-label {
+  margin-bottom: 0;
+}
+
+.stat-label {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 36px;
+  font-weight: 600;
+  color: #FFFFFF;
+  margin-bottom: 8px;
+}
+
+/* Only apply to the first stat-label */
+.stat-label:first-child {
+  margin-right: 0;
+}
+
+.stat-time-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.stat-time-row:last-child {
+  margin-bottom: 0;
+}
+
+/* Make the selector more specific to override other styles */
+.stats-container .stat-time-row .timer-icon {
+  width: 36px !important;
+  height: 36px !important;
+  min-width: 36px;
+  min-height: 36px;
+}
+
+.stat-time {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 36px;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+/* Override the default nav-popup styles for stats popup */
+.nav-popup.stats-popup .nav-popup-content {
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+  /* Position will be set by JavaScript and CSS in home.css */
+  min-width: unset !important;
+}
+
+.nav-popup-close {
+  position: absolute;
+  top: 16px !important;
+  right: 20px !important;
+  font-size: 40px !important;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  color: #FFFFFF;
+  cursor: pointer;
+  line-height: 18px;
+}

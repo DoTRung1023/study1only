@@ -1,0 +1,1772 @@
+/* Background button styles */
+.background-container {
+    position: absolute;
+    top: 40px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    font-size: 16px;
+    /* Match font size */
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    width: 320px;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    text-align: center;
+    padding: 25px 15px 0px 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+.background-container.minimized {
+    height: auto;
+    padding: 0;
+    width: auto;
+    background: none;
+    box-shadow: none;
+}
+
+.background-container.minimized .background-top-left,
+.background-container.minimized .background-top-right,
+.background-container.minimized .source,
+.background-container.minimized .background-label {
+    display: none;
+}
+
+.open-button {
+    display: none;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: white;
+    background: rgba(0, 0, 0, 0.8);
+    border: none;
+    border-radius: 12px;
+    padding: 12px 24px;
+    cursor: pointer;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    height: 45px;
+    align-items: center;
+    justify-content: center;
+}
+
+.background-container.minimized .open-button {
+    display: flex;
+}
+
+.open-button:hover {
+    background: rgba(0, 0, 0, 0.9);
+    transform: scale(1.02);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+}
+
+.background-top-left {
+    position: absolute;
+    left: 15px;
+    top: 15px;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.background-top-right {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.background-top-left:hover,
+.background-top-right:hover {
+    transform: scale(1.1);
+}
+
+.background-label {
+    font-family: 'Fredoka', sans-serif;
+    /* Use Fredoka font */
+    font-size: 24px;
+    /* Match font size */
+    font-weight: 500;
+    color: #FFFFFF;
+    /* White text color */
+    margin-top: -10px;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.background-icon-left {
+    position: absolute;
+    left: 15px;
+    top: 15px;
+    width: 28px;
+    /* Adjust size as needed */
+    height: 28px;
+}
+
+/* Background button styles */
+.background-icon-right-button {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.background-icon-right {
+    width: 28px;
+    /* Adjust size as needed */
+    height: 28px;
+}
+
+.background-icon-right-button:hover .background-icon-right {
+    transform: scale(1.1);
+    /* Add a hover effect */
+    transition: transform 0.2s ease;
+}
+
+.background-container .source {
+    display: flex;
+    justify-content: space-between;
+    /* Space out "Pexels" and "Saved" */
+    width: 100%;
+    /* Take full width of the container */
+    padding: 0;
+    /* Reduce padding to make buttons closer */
+    font-size: 14px;
+    /* Adjust font size */
+}
+
+.background-container .source span {
+    font-family: 'Fredoka', sans-serif;
+    /* Use Fredoka font */
+    font-weight: 500;
+    /* Regular weight for inactive options */
+    color: #FFFFFF;
+    /* Default white color */
+    cursor: pointer;
+    /* Make it clickable */
+    opacity: 0.8;
+    /* Slightly dim inactive options */
+    padding: 10px 20px;
+    /* Increase padding for better clickability */
+    border-radius: 10px;
+    /* Add rounded corners */
+    background: rgba(255, 255, 255, 0.2);
+    /* Grey background for inactive state */
+    transition: all 0.3s ease;
+    /* Smooth transition for hover and active states */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    /* Add a subtle shadow */
+    flex: 1;
+    /* Make buttons take equal space */
+    margin: 0 5px;
+    /* Add small spacing between buttons */
+}
+
+.background-container .source span:first-child {
+    margin-left: 0;
+    /* Remove left margin for Pexels */
+}
+
+.background-container .source span:last-child {
+    margin-right: 0;
+    /* Remove right margin for Saved */
+}
+
+.background-container .source span.active,
+.playlist-button.active, .search-button.active {
+    font-family: 'Fredoka', sans-serif;
+    /* Use Fredoka font */
+    font-weight: 500;
+    /* Highlight active option */
+    opacity: 1;
+    /* Fully visible */
+    background: #000000;
+    /* Black background for active state */
+    color: #FFFFFF;
+    /* Keep text white */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+    /* Add a glowing effect */
+}
+
+.background-container .source span:hover,
+.playlist-button:hover, .search-button:hover {
+    opacity: 1;
+    /* Fully visible on hover */
+    transform: scale(1.05);
+    /* Add a slight zoom effect */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+    /* Enhance shadow on hover */
+}
+
+.background-content {
+    padding: 8px 15px 15px 15px;
+    border-radius: 10px;
+    width: calc(100% - 30px);
+    height: calc(100% - 100px);
+    color: #FFFFFF;
+    font-family: 'Fredoka', sans-serif;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    margin-top: 0px;
+}
+
+/* Ensure the parent container for toggle buttons has enough space */
+.source {
+    display: flex;
+    /* Use flexbox to keep buttons on the same line */
+    justify-content: center;
+    /* Center the buttons horizontally */
+    gap: 10px;
+    /* Add spacing between buttons */
+    width: 100%;
+    /* Ensure it spans the full width */
+}
+
+/* Default style for toggle buttons */
+.toggle-option {
+    background: grey;
+    color: white;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    border: none;
+    border-radius: 12px;
+    padding: 8px 60px;
+    /* Increase padding to make buttons longer */
+    cursor: pointer;
+    margin: 10px 0;
+    transition: all 0.3s ease;
+    text-align: center;
+    white-space: nowrap;
+    /* Prevent text wrapping */
+}
+
+/* Active state for toggle buttons */
+.toggle-option.active {
+    background: black;
+    /* Active state color */
+    color: white;
+}
+
+/* Hover effect for all buttons */
+.toggle-option:hover {
+    background: black;
+    /* Change to black on hover */
+    color: white;
+    /* Ensure text remains white */
+    transform: scale(1.05);
+    /* Add a slight scaling effect */
+}
+
+.background-top-icons {
+    position: absolute;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 1;
+}
+
+.background-top-icon {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.background-top-icon:hover {
+    transform: scale(1.1);
+}
+
+.album-search-box {
+    /* Removed: was used for Saved tab search bar, which is now deleted */
+    display: none !important;
+}
+
+.album-search-box .search-icon-bg,
+.album-search-box .search-input,
+.album-search-box .clear-icon-bg {
+    display: none !important;
+}
+
+.pexels-search-box {
+    position: relative;
+    width: 100%;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 2px 15px;
+    backdrop-filter: blur(10px);
+    margin: 6px 0px;
+    box-sizing: border-box;
+}
+
+.pexels-search-box .search-icon-bg {
+    width: 17px;
+    height: 17px;
+    margin-right: 5px;
+}
+
+.background-container.minimized .pexels-search-box,
+.background-container.minimized .pexels-results,
+.background-container.minimized .album-results,
+.background-container.minimized .search-pexels,
+.background-container.minimized .search-album {
+    display: none;
+}
+
+.search-pexels,
+.search-album {
+    width: 100%;
+    height: calc(100% - 70px);
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+}
+
+.search-pexels.active,
+.search-album.active {
+    display: flex;
+}
+
+.pexels-search-box .search-input,
+.album-search-box .search-input {
+    flex: 1;
+    background: none;
+    border: none;
+    color: white;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 15px;
+    padding: 0;
+    outline: none;
+    line-height: 30px; /* Match container height for vertical centering */
+    height: 30px; /* Explicit height to ensure proper alignment */
+}
+
+.pexels-search-box .search-input::placeholder,
+.album-search-box .search-input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+}
+
+.pexels-search-box .clear-icon-bg,
+.album-search-box .clear-icon-bg {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    display: none;
+}
+
+.pexels-search-box .clear-icon-bg.visible,
+.album-search-box .clear-icon-bg.visible {
+    opacity: 0.7;
+    display: block;
+}
+
+.pexels-search-box .clear-icon-bg.visible:hover,
+.album-search-box .clear-icon-bg.visible:hover {
+    opacity: 1;
+}
+
+.pexels-results,
+.album-results {
+    width: 105%;
+    flex: 1;
+    overflow-y: auto;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 1px 0px 0px 0px;
+    max-height: none;
+    box-sizing: border-box;
+}
+
+.photo-card {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 6px 0px 6px 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.photo-card:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.photo-card img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-right: 0px;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.photo-image-container {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    flex-shrink: 0;
+    margin-right: 6px;
+}
+
+.photo-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-right: 0px;
+}
+
+.maximize-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    cursor: pointer;
+}
+
+.photo-image-container:hover .maximize-overlay {
+    opacity: 1;
+}
+
+.maximize-icon {
+    width: 12px;
+    height: 12px;
+    opacity: 0.9;
+}
+
+.maximize-icon:hover {
+    opacity: 1;
+    transform: scale(1.1);
+    transition: all 0.2s ease;
+}
+
+.photo-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: static;
+    background: none;
+    color: white;
+    padding: 0;
+    transform: none;
+    transition: none;
+    margin-right: 0px;
+    min-width: 0;
+    text-align: left;
+}
+
+.photo-info p {
+    margin: 2px 0 2px 0px;
+    font-size: 12px;
+    font-family: 'Fredoka', sans-serif;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    text-align: left;
+}
+
+.photo-info .description {
+    font-weight: 500;
+    font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
+}
+
+.photo-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0px;
+    margin: 0;
+    flex-shrink: 0;
+}
+
+.action-icon {
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+.action-icon:hover {
+    opacity: 1;
+}
+
+.action-icon[src*="not-save.png"] {
+    width: 30px;
+    height: 29px;
+}
+
+.action-icon[src*="share.png"] {
+    width: 30px;
+    height: 30px;
+    margin-right: 4px;
+}
+
+.no-results {
+    width: 90%;
+    text-align: center;
+    color: white;
+    font-family: 'Fredoka', sans-serif;
+    padding: 20px 10px 10px 20px;
+    font-size: 20px;
+    font-weight: 500;
+}
+
+/* Scrollbar styling */
+.pexels-results::-webkit-scrollbar {
+    width: 6px;
+}
+
+.pexels-results::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+}
+
+.pexels-results::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+}
+
+.pexels-results::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.bg-toast {
+    position: fixed;
+    top: 20px;
+    bottom: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #38c172;
+    color: white;
+    padding: 14px 24px;
+    border-radius: 12px;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 500;
+    font-size: 18px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease, top 0.4s ease;
+    max-width: 80%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.bg-toast.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.bg-toast.error {
+    background-color: #e3342f;
+}
+
+/* Tooltip styles */
+.tooltip {
+    position: relative;
+}
+
+.tooltip::before {
+    content: attr(data-tooltip);
+    position: absolute;
+    top: -30px;
+    left: 0;
+    background-color: #000;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 9999;
+    font-family: 'Fredoka', sans-serif;
+    visibility: hidden;
+}
+
+.tooltip:hover::before {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Ensure tooltips are visible in scrollable containers */
+.photo-card .tooltip::after {
+    position: fixed;
+    top: auto;
+    bottom: auto;
+    left: auto;
+    right: auto;
+}
+
+/* Preview notification */
+.preview-notification {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 15px 25px;
+    border-radius: 10px;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    z-index: 10000;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Add to Album Modal Styles */
+.add-to-album-modal {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.25);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.add-to-album-content {
+    position: relative;
+    background: #e5e5e5;
+    border-radius: 24px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+    padding: 10px 10px 5px 10px;
+    width: 340px;
+    min-height: 260px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.add-to-album-close {
+    position: absolute;
+    top: 18px;
+    left: 18px;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+}
+.add-to-album-plus {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+}
+.add-to-album-title {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 28px;
+    font-weight: 500;
+    color: #111;
+    margin-top: 10px;
+}
+.add-to-album-list {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 24px;
+    justify-content: flex-start;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 4px 4px 10px 4px;
+    width: 100%;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Enhanced scrollbar styling */
+.add-to-album-list::-webkit-scrollbar {
+    height: 6px;
+}
+
+.add-to-album-list::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 20px;
+}
+
+.add-to-album-list::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 20px;
+    transition: background 0.2s ease;
+}
+
+.add-to-album-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.25);
+}
+
+/* Hide scrollbar when not scrolling but keep functionality */
+.add-to-album-list {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.15) transparent;
+}
+
+.add-to-album-list:hover {
+    scrollbar-color: rgba(0, 0, 0, 0.15) transparent;
+}
+
+.add-to-album-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 120px;
+    flex-shrink: 0;
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+}
+.add-to-album-item.selected {
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 14px;
+}
+.add-to-album-thumb {
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+}
+.add-to-album-thumb img {
+    width: 90px;
+    height: 90px;
+    object-fit: contain;
+    opacity: 1;
+}
+.add-to-album-name {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 20px;
+    font-weight: 500;
+    color: #111;
+    margin-bottom: 2px;
+    width: 100%;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.add-to-album-count {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 20px;
+    font-weight: 500;
+    color: #888;
+    margin-top: 0;
+}
+.add-to-album-item:hover .add-to-album-thumb {
+    scale: 1.05;
+}
+
+/* Create Album Modal Styles */
+.create-album-modal {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.25);
+    z-index: 1001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.create-album-content {
+    position: relative;
+    background: #e5e5e5;
+    border-radius: 24px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+    padding: 10px 10px 0px 10px;
+    width: 340px;
+    height: 310px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.create-album-close {
+    position: absolute;
+    top: 18px;
+    left: 18px;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+}
+
+.create-album-check {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    width: 40px;
+    height: 40px;
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.create-album-check img {
+    width: 100%;
+    height: 100%;
+    cursor: inherit;
+}
+
+.create-album-check:not(.active) {
+    pointer-events: none;
+}
+
+.create-album-check.active {
+    opacity: 1;
+    pointer-events: auto;
+    cursor: pointer;
+}
+
+.create-album-check.active img {
+    cursor: pointer;
+}
+
+.create-album-title {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 28px;
+    font-weight: 500;
+    color: #111;
+    margin-top: 8px;
+}
+
+.create-album-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.album-avatar {
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.album-avatar img {
+    width: 150px;
+    height: 150px;
+    opacity: 1;
+    margin: 20px 0;
+}
+
+.album-name-input {
+    width: 100%;
+    position: relative;
+}
+
+.album-name-input input {
+    width: 100%;
+    padding: 9px 16px;
+    padding-right: 60px;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    color: #333;
+    outline: none;
+    box-sizing: border-box;
+    background: #ddd;
+}
+
+.album-name-input input::placeholder {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    color: #888;
+}
+
+.album-name-input input:focus {
+    background: #d5d5d5;
+}
+
+.length-counter {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: 'Fredoka', sans-serif;
+    font-size: 14px;
+    color: #888;
+    pointer-events: none;
+}
+
+.validation-text {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -24px;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 17px;
+    font-weight: 500;
+    color: #FF4444;
+    pointer-events: none;
+    text-align: center;
+}
+
+.album-select-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 24px;
+    height: 24px;
+    z-index: 2;
+    cursor: pointer;
+}
+
+.album-checkbox-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0;
+    margin-bottom: 10px;
+    height: 28px;
+}
+.album-checkbox-img {
+    width: 28px;
+    height: 28px;
+    display: block;
+    object-fit: contain;
+    pointer-events: none;
+    user-select: none;
+}
+.add-to-album-confirm {
+    background: #007bff;
+    color: white;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 30px;
+    cursor: pointer;
+    margin: 15px auto 8px auto;
+    transition: background 0.2s ease, opacity 0.3s ease;
+    opacity: 0.3;
+    pointer-events: none;
+    display: block;
+    text-align: center;
+    width: auto;
+}
+.add-to-album-confirm.enabled {
+    opacity: 1;
+    pointer-events: auto;
+}
+.add-to-album-confirm.enabled:hover {
+    background: #0056b3;
+}
+
+.album-results {
+    max-height: 320px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-right: 6px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0,0,0,0.5) transparent;
+}
+.album-results::-webkit-scrollbar {
+    width: 8px;
+}
+.album-results::-webkit-scrollbar-track {
+    background: transparent;
+}
+.album-results::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.5);
+    border-radius: 8px;
+}
+.album-results::-webkit-scrollbar-thumb:hover {
+    background: rgba(0,0,0,0.6);
+}
+.album-list-card {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 0px 10px 0px 3px;
+    height: 60px;
+    box-sizing: border-box;
+    width: 100%;
+    transition: background 0.2s;
+    cursor: pointer;
+}
+.album-list-card:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+.album-list-thumb {
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.album-list-thumb img {
+    width: 45px;
+    height: 45px;
+    object-fit: contain;
+    margin: 0 10px 0 5px;
+}
+.album-list-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1;
+    min-width: 0;
+    text-align: left;
+}
+.album-list-name {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 19px;
+    font-weight: 500;
+    color: white;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    text-align: left;
+}
+.album-list-count {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: white;
+    margin-top: 2px;
+    text-align: left;
+    opacity: 0.7;
+}
+
+.album-edit-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-left: 8px;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 6px;
+    transition: background 0.2s ease;
+}
+
+.album-edit-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.album-edit-btn img {
+    width: 20px;
+    height: 20px;
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+}
+
+.album-edit-btn:hover img {
+    opacity: 1;
+}
+
+.album-sort-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    width: 100%;
+    margin-top: 10px;
+    position: relative;
+}
+.album-sort-btn {
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: flex-start;
+    box-shadow: none;
+    justify-content: flex-start;
+    min-width: 0;
+}
+.album-sort-icon-row {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 2px;
+    justify-content: flex-start;
+}
+.album-sort-btn img {
+    display: block;
+}
+
+/* Album Sort Dropdown - styled like Spotify playlist dropdown */
+.album-sort-dropdown {
+    background: #3a3535;
+    color: #fff;
+    border-radius: 14px;
+    padding: 4px 0 4px 0px;
+    width: 140px;
+    height: auto;
+    min-height: 108px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    font-family: 'Fredoka', sans-serif;
+    font-size: 16px;
+    margin-top: 2px;
+    position: absolute;
+    z-index: 1000;
+    top: 14px;
+    left: 0;
+    display: none;
+}
+.album-sort-dropdown .dropdown-section {
+    padding: 0 4px 0 4px;
+}
+.album-sort-dropdown .dropdown-item {
+    padding: 4px 0 4px 7px;
+    cursor: pointer;
+    white-space: nowrap;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    color: #fff;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 16px;
+}
+.album-sort-dropdown .dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+.album-sort-dropdown .dropdown-item.selected {
+    font-weight: 500;
+}
+.album-sort-dropdown .dropdown-divider {
+    border: none;
+    border-top: 1.5px solid rgba(255, 255, 255, 0.7);
+    margin: 5px 0;
+    opacity: 1;
+    width: 100%;
+}
+
+/* Edit Album Modal Styles */
+.edit-album-modal {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.25);
+    z-index: 1002;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.edit-album-content {
+    position: relative;
+    background: #e5e5e5;
+    border-radius: 24px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+    padding: 5px 15px 10px 15px;
+    width: 370px;
+    max-height: 80vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.edit-album-close {
+    position: absolute;
+    top: 18px;
+    left: 18px;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+}
+
+.edit-album-delete {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.edit-album-delete:hover {
+    transform: scale(1.1);
+}
+
+.edit-album-title {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 28px;
+    font-weight: 500;
+    color: #111;
+    margin-top: 10px;
+}
+
+.edit-album-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.edit-album-form .album-avatar {
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.edit-album-form .album-avatar img {
+    width: 140px;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 16px;
+    margin: 5px 0px 10px 0px;
+}
+
+.edit-validation-text {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 17px;
+    font-weight: 500;
+    color: #FF4444;
+    text-align: center;
+    margin-top: 8px;
+    transition: opacity 0.3s ease;
+}
+
+.edit-length-counter {
+    position: absolute;
+    right: 16px;
+    top: 29%;
+    transform: translateY(-50%);
+    font-family: 'Fredoka', sans-serif;
+    font-size: 14px;
+    color: #888;
+    pointer-events: none;
+}
+
+.edit-album-divider {
+    width: 80%;
+    height: 1px;
+    background: #ccc;
+    margin: 5px 0px;
+}
+
+.edit-album-section-title {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 20px;
+    font-weight: 500;
+    color: #111;
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+.edit-album-images {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 5px;
+    border-radius: 10px;
+    background: rgba(0,0,0,0.05);
+    justify-content: center;
+}
+
+/* Scrollbar styling for edit album images */
+.edit-album-images::-webkit-scrollbar {
+    width: 6px;
+}
+
+.edit-album-images::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.edit-album-images::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 3px;
+}
+
+.edit-album-images::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.edit-album-image-item {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    box-sizing: border-box;
+    border: 3px solid transparent;
+}
+
+.edit-album-image-item:hover {
+    transform: scale(1.05);
+}
+
+.edit-album-image-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.edit-album-image-item.selected {
+    border: 3px solid #007bff;
+    box-shadow: 0 0 10px rgba(0,123,255,0.5);
+}
+
+.edit-album-confirm {
+    background: #007bff;
+    color: white;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 30px;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: background 0.2s ease, opacity 0.3s ease;
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+.edit-album-confirm.has-changes {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.edit-album-confirm.has-changes:hover {
+    background: #0056b3;
+}
+
+/* Delete Album Confirmation Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 2000;
+    font-family: 'Fredoka', sans-serif;
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 12px;
+    width: 80%;
+    max-width: 400px;
+    position: relative;
+    box-shadow: 0 4px 32px rgba(0, 0, 0, 0.2);
+}
+
+.modal-close {
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #666;
+    transition: color 0.2s ease;
+}
+
+.modal-close:hover {
+    color: #333;
+}
+
+.modal h3 {
+    color: #333;
+    margin-bottom: 16px;
+    font-size: 1.5em;
+    font-weight: 500;
+}
+
+.modal p {
+    margin-bottom: 20px;
+    color: #666;
+    font-size: 1.1em;
+    line-height: 1.4;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.modal-buttons button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.modal-buttons button:first-child {
+    background: #6c757d;
+    color: white;
+}
+
+.modal-buttons button:first-child:hover {
+    background: #5a6268;
+}
+
+.modal-buttons button:last-child {
+    background: #dc3545;
+    color: white;
+}
+
+.modal-buttons button:last-child:hover {
+    background: #c82333;
+}
+
+/* View Album Images Modal Styles */
+.view-album-modal {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.25);
+    z-index: 1004;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.view-album-content {
+    position: relative;
+    background: #e5e5e5;
+    border-radius: 24px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+    padding: 0px 10px 0px 10px;
+    width: 300px;
+    height: 440px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.view-album-close {
+    position: absolute;
+    top: 18px;
+    left: 18px;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+}
+
+.view-album-delete-all {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.view-album-delete-all:hover {
+    transform: scale(1.1);
+}
+
+.view-album-delete-all.disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.view-album-delete-all.disabled:hover {
+    transform: none;
+}
+
+.view-album-title {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 28px;
+    font-weight: 500;
+    color: #111;
+    margin-top: 15px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.view-album-images {
+    width: 100%;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 0px 5px 0px 0px;
+    height: 300px;
+    box-sizing: border-box;
+}
+
+.view-album-image-item {
+    display: flex;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 6px 0px 6px 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.view-album-image-item:hover {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.view-album-image-item img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-right: 0px;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.view-album-image-container {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    flex-shrink: 0;
+    margin-right: 6px;
+}
+
+.view-album-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-right: 0px;
+}
+
+.view-album-image-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: static;
+    background: none;
+    color: #333;
+    padding: 0;
+    transform: none;
+    transition: none;
+    margin-right: 0px;
+    min-width: 0;
+    text-align: left;
+}
+
+.view-album-image-info p {
+    margin: 2px 0 2px 0px;
+    font-size: 12px;
+    font-family: 'Fredoka', sans-serif;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    text-align: left;
+    color: #444;
+}
+
+.view-album-image-info .description {
+    font-weight: 500;
+    font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
+    color: #222;
+}
+
+.view-album-image-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0px;
+    margin: 0;
+    flex-shrink: 0;
+}
+
+.view-album-checkbox {
+    width: 30px !important;
+    height: 29px !important;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    object-fit: contain;
+    flex-shrink: 0;
+    border-radius: 0 !important;
+}
+
+.view-album-checkbox:hover {
+    transform: scale(1.1);
+}
+
+.view-album-share {
+    width: 30px !important;
+    height: 30px !important;
+    margin-right: 4px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    object-fit: contain !important;
+    flex-shrink: 0;
+    border-radius: 0 !important;
+}
+
+.view-album-share:hover {
+    transform: scale(1.1);
+}
+
+.view-album-remove-selected {
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+    right: 15px;
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    color: white;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 17px;
+    font-weight: 500;
+    border: none;
+    border-radius: 16px;
+    padding: 12px 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    opacity: 0.2;
+    pointer-events: none;
+    z-index: 100;
+    text-align: center;
+    display: block;
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    letter-spacing: 0.5px;
+}
+
+.view-album-remove-selected.enabled {
+    opacity: 1;
+    pointer-events: auto;
+    box-shadow: 0 6px 16px rgba(220, 53, 69, 0.4);
+    transform: translateY(-1px);
+}
+
+.view-album-remove-selected.enabled:hover {
+    background: linear-gradient(135deg, #c82333 0%, #a71e2a 100%);
+    box-shadow: 0 8px 20px rgba(220, 53, 69, 0.5);
+    transform: translateY(-2px);
+}
+
+.view-album-no-images {
+    text-align: center;
+    color: #666;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 20px;
+    font-weight: 500;
+    padding: 40px 20px;
+    grid-column: 1 / -1;
+}
+
+/* Scrollbar styling for view album images */
+.view-album-images::-webkit-scrollbar {
+    width: 6px;
+}
+
+.view-album-images::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+}
+
+.view-album-images::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+}
+
+.view-album-images::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.view-album-maximize-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    cursor: pointer;
+}
+
+.view-album-image-container:hover .view-album-maximize-overlay {
+    opacity: 1;
+}
+
+.view-album-maximize-icon {
+    width: 12px;
+    height: 12px;
+    opacity: 0.9;
+}
+
+.view-album-maximize-icon:hover {
+    opacity: 1;
+    transform: scale(1.1);
+    transition: all 0.2s ease;
+}

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link rel="icon" type="image/png" href="images/web-icon.png">
+    <link rel="shortcut icon" type="image/png" href="images/web-icon.png">
+    <link rel="stylesheet" href="stylesheets/signup.css">
+    <link rel="stylesheet" href="stylesheets/responsive.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fredoka">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <link rel="stylesheet" href="stylesheets/signup-select2.css">
+    <link rel="stylesheet" href="stylesheets/form-errors.css">
+    <script defer src="scripts/signup.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Sign Up</h1>
+        </div>
+        <div class="form-container">
+            <form id="signupForm" onsubmit="return false;">
+                <div class="form-group">
+                    <input type="text" id="username" placeholder="username" required tabindex="1">
+                    <p id="username-error" class="error-message"></p>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="address" placeholder="city" required tabindex="2">
+                    <p id="address-error" class="error-message"></p>
+                </div>
+                <div class="form-group">
+                    <select id="country" class="select2" tabindex="3" required>
+                        <option value="">Select your country</option>
+                        <!-- Countries will be populated by JavaScript -->
+                    </select>
+                    <p id="country-error" class="error-message"></p>
+                </div>
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <div class="input-group">
+                            <input type="password" placeholder="password" id="password" tabindex="4" />
+                            <span class="toggle-password" id="toggleIcon" onclick="togglePassword()" tabindex="5">
+                                <img src="images/hide.png" alt="hide" />
+                            </span>
+                        </div>
+                        <p id="password-error" class="error-message">Password must be between 6 and 20 characters.</p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="confirm-password" placeholder="confirm password" required tabindex="6">
+                    <p id="confirm-password-error" class="error-message"></p>
+                </div>
+                <div class="button-group">
+                    <button type="button" class="btn btn-return" onclick="window.location.href='login.html'" tabindex="7">Return</button>
+                    <button type="submit" class="btn btn-confirm disabled" id="confirmButton" disabled tabindex="8">Confirm</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeConfirmModal()">×</span>
+            <h3>Confirm Sign Up</h3>
+            <p>Are you sure you want to create an account with these details?</p>
+            <div class="modal-buttons">
+                <button type="button" onclick="closeConfirmModal()">Cancel</button>
+                <button type="button" onclick="submitSignup()">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Notification -->
+    <div id="successNotification" class="notification" style="display: none;">
+        <div class="notification-content">
+            <span class="notification-close" onclick="closeNotification()">×</span>
+            <h3>Success!</h3>
+            <p>Your account has been created successfully!</p>
+            <p>Redirecting to login page...</p>
+        </div>
+    </div>
+</body>
+</html>
