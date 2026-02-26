@@ -1,11 +1,9 @@
-# Group Repository for COMP SCI 2207/7207 Web & Database Computing Web Application Project (2023 Semester 1)
+# Group Repository for COMP SCI 2207/7207 Web & Database Computing Web Application Project (2024 Semester 1)
 
-Your group's shared repository for the WDC 2023 Web App Project.
+Your group's shared repository for the WDC 2024 Web App Project.
 
 Auto commit/push/sync to Github is disabled by default in this repository.
-- Enable the GitDoc extension to use this fucntionality (either in your VSCode settings, or in the Dev Container settings)
-
-See [HERE](https://myuni.adelaide.edu.au/courses/85266/pages/2023-web-application-group-project-specification) for the project specification.
+- Enable the GitDoc extension to use this functionality (either in your VSCode settings, or in the Dev Container settings)
 
 We recommend using the 'Shared Repository Model (Branch & Pull)' to collaborate on your work in this single repostory.
 - You can read more about collaborating on GitHub repositories [HERE](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests)
@@ -14,7 +12,7 @@ We recommend using the 'Shared Repository Model (Branch & Pull)' to collaborate 
 
 
 # ------------------------------------------------------------------------------
-# Study1Only - Music-Enhanced Learning Platform
+# Study1Only - Music-Enhanced Learning Platform (Link: https://study1-only-wdc-prj.vercel.app)
 # ------------------------------------------------------------------------------
 
 ## Project Description
