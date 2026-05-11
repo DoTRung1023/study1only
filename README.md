@@ -1,6 +1,6 @@
 # Study1Only – Music-Enhanced Learning Platform
 
-**Live:** https://study1-only-wdc-prj.vercel.app
+**Live:** https://study1only.onrender.com
 
 A web-based productivity platform that combines a Pomodoro-style study timer, Spotify music integration, and social features to help students stay focused and motivated.
 
@@ -43,10 +43,14 @@ Create a `.env` file in the project root:
 ```
 SPOTIFY_CLIENT_ID=your_spotify_client_id
 SPOTIFY_CLIENT_SECRET=your_spotify_client_secret
+SPOTIFY_REDIRECT_URI=http://localhost:8080/spotify/callback
 DB_HOST=localhost
+DB_PORT=3306
 DB_USER=root
+DB_PASSWORD=your_db_password
 DB_NAME=study1only_db
 SESSION_SECRET=your_session_secret
+PEXELS_API_KEY=your_pexels_api_key
 ```
 
 ---
