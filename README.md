@@ -102,6 +102,14 @@ PEXELS_API_KEY=your_pexels_api_key
 - **One-to-one Spotify linking:** Each Spotify account can only be linked to one platform account.
 - **External API dependency:** Spotify and Pexels APIs must be available for full functionality.
 
+### Deployment (Render + Clever Cloud free tier)
+
+- **Cold starts:** The app sleeps after 15 minutes of inactivity. The first request after sleep takes ~30 seconds to respond.
+- **Ephemeral file storage:** Uploaded files (avatars, etc.) are stored on Render's local filesystem and are wiped on every redeploy or restart. Uploads do not persist long-term.
+- **Sessions lost on restart:** `express-session` uses an in-memory store, so all active sessions are cleared whenever the app restarts or redeploys.
+- **Database limits:** Clever Cloud's free MySQL plan is a shared instance with limited storage and concurrent connections — not suitable for production traffic.
+- **Spotify redirect URI:** If the Render app URL ever changes, the redirect URI must be manually updated in the Spotify Developer Dashboard and in the environment variables.
+
 ---
 
 ## Technology Stack
