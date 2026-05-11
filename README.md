@@ -1,171 +1,122 @@
-# Group Repository for COMP SCI 2207/7207 Web & Database Computing Web Application Project (2024 Semester 1)
+# Study1Only – Music-Enhanced Learning Platform
 
-Your group's shared repository for the WDC 2024 Web App Project.
+**Live:** https://study1-only-wdc-prj.vercel.app
 
-Auto commit/push/sync to Github is disabled by default in this repository.
-- Enable the GitDoc extension to use this functionality (either in your VSCode settings, or in the Dev Container settings)
+A web-based productivity platform that combines a Pomodoro-style study timer, Spotify music integration, and social features to help students stay focused and motivated.
 
-We recommend using the 'Shared Repository Model (Branch & Pull)' to collaborate on your work in this single repostory.
-- You can read more about collaborating on GitHub repositories [HERE](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests)
-- When working on the same file at the same time, the 'Live Share' feature in VSCode can also help.
+---
 
-# ------------------------------------------------------------------------------
-# Study1Only - Music-Enhanced Learning Platform (Link: https://study1-only-wdc-prj.vercel.app)
-# ------------------------------------------------------------------------------
-
-## Project Description
-
-Study1Only is a web-based productivity platform designed to enhance focus and motivation through a music-integrated study environment. Aimed primarily at students aged 15–25, including high school, university, and remote learners, the platform combines essential study tools with customizable music playback and background visuals to create a distraction-free, engaging atmosphere.
-
-The platform integrates with Spotify for personalized music experiences and provides comprehensive study session tracking, user management, social features like leaderboards and achievements to maintain motivation during study sessions.
-
-## Setup Instructions
+## Setup
 
 ### Prerequisites
 
-- Node.js and npm installed
-- MySQL server installed and running
-- Git for cloning the repository
+- Node.js and npm
+- MySQL server
 
-### Database Setup
-
-- Set up terminal to accept connection to MySQL without password
-- Start MySQL server and initialize database:
+### Database
 
 ```bash
-# Start MySQL server
+# Start MySQL and initialise schema
 sudo service mysql start
-
-# Initialize database schema
 mysql < db/schema.sql
 ```
 
-### Application Setup
+### Install & Run
 
-- Clone the repository:
 ```bash
-git clone https://github.com/UAdelaide/25S1_WDC_UG_Groups_111.git
-```
-
-- Install dependencies:
-```bash
-npm install express mysql2 bcrypt multer express-validator he luxon axios dotenv request
-```
-
-- Start the application:
-```bash
+npm install
 npm start
 ```
 
+For development with auto-reload:
+
+```bash
+npm run dev
+```
+
+The app runs on `http://localhost:8080`.
+
+### Environment Variables
+
+Create a `.env` file in the project root:
+
+```
+SPOTIFY_CLIENT_ID=your_spotify_client_id
+SPOTIFY_CLIENT_SECRET=your_spotify_client_secret
+DB_HOST=localhost
+DB_USER=root
+DB_NAME=study1only_db
+SESSION_SECRET=your_session_secret
+```
+
+---
+
 ## Test Accounts
 
-### Admin Account:
-- Username: advanmin
-- Password: toilaadminday123
+| Role  | Username / Email          | Password          |
+|-------|---------------------------|-------------------|
+| Admin | advanmin                  | toilaadminday123  |
+| Spotify test | testvanuser@gmail.com | testuser123    |
 
-### Spotify Test Account:
-- Username: testvanuser@gmail.com
-- Password: testuser123
+---
 
-## Features and Functionality
-
-### Core Features
-
-#### Spotify Integration
-- Music Playback: Play music during study sessions
-- Search Functionality: Search for songs and artists
-- Liked Songs Access: Access your Spotify liked songs library
-- Playlist Management: Search and access saved playlists from your Spotify account
-- Seamless Integration: Connect your Spotify account for personalized music experience
-
-#### Background Customization
-- Dynamic Backgrounds: Change study environment backgrounds
-- Custom Albums: Create and organize custom background collections
-- Save to Albums: Save favorite backgrounds to personal albums
-- Visual Environment: Enhance focus with curated visual environments
-
-#### Study Session Management
-- Custom Session Timer: Set personalized study session durations
-- Break Intervals: Configure custom break intervals between study sessions
-- Study Statistics: Comprehensive analytics including:
-  - Total study time (all-time, monthly, weekly breakdowns)
-
-#### Social Features
-- Leaderboards: Compare study time with other users through global and country-based rankings
-- Achievements: Unlock motivational achievements when reaching study milestones and login streak goals
-- Streak Tracking: Monitor daily study streaks, login streaks, and longest streaks
-- Regional Competition: Country-specific leaderboards for local competition and motivation
-
-## Completed Functionality
-
-### User Management System
-- Secure Authentication: Complete user registration and login with CAPTCHA verification
-- Profile Management: Users can update personal details, username, password, avatar, and country
-- Country-Based Features: Users select their country during signup for regional leaderboard rankings
-- Account Security: Password hashing, secure session management, and account lockout protection
-
-### Admin Dashboard
-- User Administration: Admin controls for user management
-- User Data Management: Change user data and information
-- Account Control: Add and remove user accounts
-- User Oversight: Administrative control over user accounts and data
+## Features
 
 ### Spotify Integration
-- Music Playback: Fully functional music playback during study sessions
-- Search Functionality: Complete search system for songs and artists
-- Liked Songs Access: Full access to user's Spotify liked songs library
-- Playlist Management: Complete search and access to saved playlists from Spotify account
-- OAuth Integration: Secure Spotify account connection with token management
+- Play music during study sessions via the Spotify Web Playback SDK
+- Search songs and artists; browse liked songs and saved playlists
+- Detects playback on other devices and disables controls accordingly
+- Spotify logout without page reload
+
+### Study Timer
+- Custom session and break durations with audio notifications
+- Session statistics: total study time broken down by week, month, and all-time
 
 ### Background Customization
-- Dynamic Backgrounds: Complete background changing functionality
-- Custom Albums: Fully implemented custom background collection system
-- Save to Albums: Complete functionality to save favorite backgrounds to personal albums
-- Visual Environment: Full integration with Pexels API for curated visual environments
-
-### Study Session Management
-- Custom Session Timer: Personalized study session duration customization
-- Break Intervals: Custom break intervals between study sessions with audio notifications
-- Session Transitions: Sound alerts when transitioning from study to break sessions
-- Study Statistics: Total study time tracking by week, month, and all-time
-- Performance Analytics: Statistics integration with leaderboard positioning and achievement progress
+- Dynamic backgrounds via the Pexels API
+- Custom albums to organise and save favourite backgrounds
 
 ### Social Features
-- Leaderboards: Complete global and country-based ranking system
-- Achievements: Fully implemented achievement system for study milestones and login streaks
-- Streak Tracking: Complete daily study streak and login streak monitoring system
-- Regional Competition: Full country-specific leaderboard functionality
+- Global and country-based leaderboards
+- Achievement system for study milestones and login streaks
+- Daily study streak and login streak tracking
 
-### Technical Infrastructure
-- Responsive Design: Complete cross-device compatibility
-- API Integration: Full integration with Spotify and Pexels APIs
-- Database Management: Complete MySQL database with optimized performance
-- Security Implementation: Full OWASP-compliant security measures including XSS, CSRF, and SQL injection protection
+### User Management
+- Registration and login with CAPTCHA verification
+- Profile management: username, password, avatar, country
+- Account security: bcrypt hashing, secure sessions, account lockout
 
-## Known Bugs and Limitations
+### Admin Dashboard
+- View, edit, and remove user accounts
 
-### Limitations
-- Spotify Developer Account Restriction: Users need to be added to the user management of our Spotify developer account to access Spotify features
-- Premium Account Requirement: Only Spotify Premium accounts can play music through the platform. Non-premium users can access all other Spotify features (search, browse playlists, view liked songs) but cannot initiate playback
-- One-to-One Spotify Account Linking: Each Spotify account can only be linked to one web account (Spotify API restriction)
-- API Dependencies: Platform functionality depends on external API availability (Spotify, Pexels)
+---
+
+## Limitations
+
+- **Spotify Developer Mode:** Users must be added to the Spotify developer dashboard to access Spotify features.
+- **Premium required for playback:** Free accounts can search and browse but cannot play music.
+- **One-to-one Spotify linking:** Each Spotify account can only be linked to one platform account.
+- **External API dependency:** Spotify and Pexels APIs must be available for full functionality.
+
+---
 
 ## Technology Stack
-- Frontend: Vue.js, HTML5, CSS3, JavaScript
-- Backend: Node.js with Express.js framework
-- Database: MySQL relational database
-- Architecture: MVC (Model-View-Controller) pattern
-- APIs: Spotify Web API, Pexels API
-- Security: bcrypt password hashing, CAPTCHA verification, OWASP security guidelines
 
-## Team
+| Layer      | Technology                              |
+|------------|-----------------------------------------|
+| Frontend   | HTML5, CSS3, JavaScript                 |
+| Backend    | Node.js, Express.js                     |
+| Database   | MySQL (mysql2)                          |
+| APIs       | Spotify Web API, Pexels API             |
+| Security   | bcrypt, helmet, express-rate-limit, xss |
 
-Group 111:
-- Nam Trung Tran - Achievement system (backend & frontend), Database architecture, Admin page (backend & frontend), Navigation bar, Home page transition, Tester
-- Tri Dung Nguyen - Leaderboard system (frontend & backend), Study statistics, Clock frontend, User avatar upload, Home page frontend, Navigation bar, Responsive design
-- Minh Chien Nguyen (Leader) - Clock functionality, Study statistics backend, UI design, Login system (frontend & backend), User detail updates, User login session management
-- Hai Trung Do - Background system (frontend & backend), Team code merging and integration, Spotify integration (frontend & backend), Cookie management
+---
 
-For additional support or questions, please refer to the project documentation or contact the development team.
+## Team – Group 111 (COMP SCI 2207/7207, 2025 Semester 1)
 
-
+| Member | Contributions |
+|--------|---------------|
+| Nam Trung Tran | Achievement system, database architecture, admin page, navigation bar |
+| Tri Dung Nguyen | Leaderboard, study statistics, clock frontend, user avatar upload, responsive design |
+| Minh Chien Nguyen *(Leader)* | Clock functionality, study statistics backend, login system, session management |
+| Hai Trung Do | Background system, Spotify integration, cookie management, code integration |
