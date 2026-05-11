@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx nodemon *)",
+      "Bash(mysql --version)",
+      "Bash(brew services *)",
+      "Bash(mysql -u root -e \"SHOW DATABASES;\")",
+      "Bash(mysql -u root --password=\"\" -e \"SHOW DATABASES;\")",
+      "Bash(node --check \"/Users/dotrung67/Documents/Adelaide/2025 Sem 1/WDC/Study1Only-WDC-Prj/public/scripts/home-spotify.js\")"
+    ]
+  }
+}

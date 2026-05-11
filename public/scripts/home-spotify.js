@@ -51,11 +51,9 @@ const NEXT_TRACK_DEBOUNCE = 1000; // Increase to 1 second
 // Add global variable for repeat-1 lock
 let isRepeatOneProcessing = false;
 
-// Add global variables at the top with other variables
 let prevTrackTimeout = null;
 const PREV_TRACK_DEBOUNCE = 1000; // Increase to 1 second
-
-// Add global variables at the top with other variables
+let prevButtonReenableTimer = null;
 let playlistHistory = [];
 let currentPlaylistIndex = -1;
 
@@ -73,40 +71,93 @@ const SPOTIFY_STATE_EXPIRY = 7 * 24 * 60 * 60 * 1000; // 7 days in ms
 // --- Enhanced Playback State Persistence ---
 const PLAYER_STATE_KEY = 'player_state_v2';
 
+// --- Utility helpers ---
+function requirePremium(featureName) {
+    const ok = getSpotifyPremiumStatus ? getSpotifyPremiumStatus() : localStorage.getItem('isPremium') === 'true';
+    if (!ok) showToast(`Spotify Premium is required to use ${featureName}.`, true);
+    return ok;
+}
+
+function setButtonEnabled(button, enabled, disabledMsg) {
+    if (!button) return;
+    button.style.opacity = enabled ? '1' : '0.5';
+    button.style.cursor = enabled ? 'pointer' : 'not-allowed';
+    if (!enabled && disabledMsg) {
+        button.onclick = (e) => { e.preventDefault(); e.stopPropagation(); showToast(disabledMsg, true); };
+    }
+}
+
+function getTrackImage(track) {
+    return (track && track.album && track.album.images && track.album.images[0] && track.album.images[0].url)
+        || 'images/spotify/default-song.png';
+}
+
+function getArtistNames(track) {
+    return (track && track.artists) ? track.artists.map((a) => a.name).join(', ') : '';
+}
+
 // --- Visual indicator for external playback ---
 let isExternalPlayback = false;
-function showExternalPlaybackIndicator(deviceName) {
-    let indicator = document.getElementById('external-playback-indicator');
-    if (!indicator) {
-        indicator = document.createElement('div');
-        indicator.id = 'external-playback-indicator';
-        indicator.style.position = 'absolute';
-        indicator.style.top = '10px';
-        indicator.style.left = '10px'; // Move to left
-        indicator.style.background = 'rgba(30,215,96,0.9)';
-        indicator.style.color = '#fff';
-        indicator.style.padding = '8px 16px';
-        indicator.style.borderRadius = '20px';
-        indicator.style.fontWeight = 'bold';
-        indicator.style.zIndex = '1000';
-        indicator.style.display = 'flex';
-        indicator.style.alignItems = 'center';
-        indicator.style.gap = '8px';
-        indicator.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
-        indicator.style.cursor = 'pointer';
-        indicator.innerHTML = `<span id="external-indicator-msg"></span><span id="external-indicator-toggle" style="margin-left:8px;font-size:16px;">✖️</span>`;
-        document.body.appendChild(indicator);
-        // Toggle/hide on click
-        indicator.querySelector('#external-indicator-toggle').onclick = () => {
-            indicator.style.display = 'none';
+
+const EXTERNAL_BUTTON_IDS = [
+    'play-button', 'prev-button', 'next-button',
+    'shuffle-button', 'repeat-button', 'volume-button', 'share-button'
+];
+
+function disableAllControlsForExternalPlayback(deviceName) {
+    const msg = `Playing on ${deviceName || 'another device'}`;
+    EXTERNAL_BUTTON_IDS.forEach((id) => {
+        const btn = document.getElementById(id);
+        if (!btn) return;
+        btn.style.opacity = '0.4';
+        btn.style.cursor = 'not-allowed';
+        btn.onclick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            showToast(msg, true);
         };
+    });
+    const volumeSlider = document.getElementById('volume-slider');
+    if (volumeSlider) volumeSlider.disabled = true;
+
+    // Show banner inside the controls area
+    const controls = document.querySelector('.controls');
+    if (controls && !document.getElementById('external-playback-banner')) {
+        const banner = document.createElement('div');
+        banner.id = 'external-playback-banner';
+        banner.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.55);border-radius:8px;z-index:10;pointer-events:none;';
+        banner.innerHTML = `<span id="external-banner-text" style="color:#1db954;font-weight:bold;font-size:13px;text-align:center;padding:4px 10px;background:rgba(0,0,0,0.7);border-radius:12px;"></span>`;
+        controls.appendChild(banner);
     }
-    indicator.querySelector('#external-indicator-msg').textContent = `Spotify playing on: ${deviceName || 'another device'}`;
-    indicator.style.display = 'flex';
+    const bannerText = document.getElementById('external-banner-text');
+    if (bannerText) bannerText.textContent = msg;
 }
-function hideExternalPlaybackIndicator() {
-    const indicator = document.getElementById('external-playback-indicator');
-    if (indicator) indicator.style.display = 'none';
+
+function restoreAllControlsAfterExternalPlayback() {
+    EXTERNAL_BUTTON_IDS.forEach((id) => {
+        const btn = document.getElementById(id);
+        if (!btn) return;
+        btn.style.opacity = '1';
+        btn.style.cursor = 'pointer';
+    });
+    // Restore individual onclick handlers
+    const playBtn = document.getElementById('play-button');
+    if (playBtn) playBtn.onclick = togglePlayback;
+    const prevBtn = document.getElementById('prev-button');
+    if (prevBtn) prevBtn.onclick = playPreviousTrack;
+    const nextBtn = document.getElementById('next-button');
+    if (nextBtn) nextBtn.onclick = playNextTrack;
+    const shuffleBtn = document.getElementById('shuffle-button');
+    if (shuffleBtn) shuffleBtn.onclick = toggleShuffle;
+    const repeatBtn = document.getElementById('repeat-button');
+    if (repeatBtn) repeatBtn.onclick = toggleRepeat;
+    const volumeBtn = document.getElementById('volume-button');
+    if (volumeBtn) volumeBtn.onclick = toggleMute;
+    const volumeSlider = document.getElementById('volume-slider');
+    if (volumeSlider) volumeSlider.disabled = false;
+
+    const banner = document.getElementById('external-playback-banner');
+    if (banner) banner.remove();
 }
 
 // --- Poll for external playback and update UI ---
@@ -117,8 +168,8 @@ function removePlayPauseOverlay() {
     const overlay = document.getElementById('external-play-overlay');
     if (overlay) overlay.remove();
 }
-function setPlayPauseOverlay(isPlayingOtherDevice) {
-    removePlayPauseOverlay(); // Just ensure any old overlay is gone
+function setPlayPauseOverlay() {
+    removePlayPauseOverlay();
 }
 
 function startExternalPlaybackPolling() {
@@ -127,7 +178,6 @@ function startExternalPlaybackPolling() {
         try {
             const playback = await callSpotifyApi('/me/player');
             const deviceId = localStorage.getItem('spotify_device_id');
-            const playBtn = document.getElementById('play-button');
             if (
                 playback
                 && playback.device
@@ -135,39 +185,21 @@ function startExternalPlaybackPolling() {
                 && playback.item
             ) {
                 isExternalPlayback = true;
-                // Only update if the track changed
                 if (!lastExternalTrackId || lastExternalTrackId !== playback.item.id) {
                     lastExternalTrackId = playback.item.id;
                     updateSongInfo({
-                        image: (playback.item.album.images && playback.item.album.images[0] && playback.item.album.images[0].url) || 'images/spotify/default-song.png',
+                        image: getTrackImage(playback.item),
                         name: playback.item.name,
-                        artists: playback.item.artists.map((a) => a.name).join(', ')
+                        artists: getArtistNames(playback.item)
                     });
                 }
-                // Update play/pause button to match actual playback state
-                if (playBtn) {
-                    if (playback.is_playing) {
-                        playBtn.src = 'images/spotify/play.png';
-                        // No overlay
-                        playBtn.onclick = async () => {
-                            await callSpotifyApi('/me/player/pause', 'PUT');
-                        };
-                    } else {
-                        playBtn.src = 'images/spotify/pause.png';
-                        // No overlay
-                        playBtn.onclick = async () => {
-                            await callSpotifyApi('/me/player/play', 'PUT');
-                        };
-                    }
-                    playBtn.style.opacity = '1';
-                    playBtn.style.cursor = 'pointer';
-                }
-                showExternalPlaybackIndicator(playback.device.name);
+                disableAllControlsForExternalPlayback(playback.device.name);
             } else {
-                isExternalPlayback = false;
-                lastExternalTrackId = null;
-                hideExternalPlaybackIndicator();
-                removePlayPauseOverlay();
+                if (isExternalPlayback) {
+                    isExternalPlayback = false;
+                    lastExternalTrackId = null;
+                    restoreAllControlsAfterExternalPlayback();
+                }
             }
         } catch (e) {
             // Optionally handle errors
@@ -236,9 +268,10 @@ function updateControlButtonsState(hasPlayback) {
     // Update play button state separately
     updatePlayButtonState();
 
-    // Update previous and next button states separately
-    updatePrevButtonState();
-    updateNextButtonState();
+    // prev/next button state is handled directly by the player_state_changed listener
+    // (using SDK state, no extra API call) and by syncPlaybackState().
+    // Calling async updatePrevButtonState/updateNextButtonState here races against
+    // the already-set state and causes the buttons to blink.
 
     controlButtons.forEach((buttonId) => {
         const button = document.getElementById(buttonId);
@@ -490,14 +523,26 @@ async function logoutSpotify() {
             player = null;
         }
 
+        // Stop external playback polling
+        if (externalPlaybackInterval) {
+            clearInterval(externalPlaybackInterval);
+            externalPlaybackInterval = null;
+        }
+
         // Show success message
         showToast('Successfully logged out from Spotify');
 
-        // Redirect to home.html to refresh the page in logged out state
-        window.location.href = '/home.html';
+        // Reset the Spotify UI back to the "Connect" button without a page reload
+        const spotifyContainer = document.getElementById('spotify-container');
+        if (spotifyContainer) {
+            spotifyContainer.innerHTML = `<button id="spotify-button" title="Connect to Spotify">Click To Connect To Spotify</button>`;
+            const btn = document.getElementById('spotify-button');
+            if (btn) {
+                btn.onclick = () => { window.location.href = '/spotify/authorise'; };
+            }
+        }
     } catch (e) {
         showToast('Failed to unlink Spotify account', true);
-
     }
 }
 
@@ -550,7 +595,7 @@ window.displayCurrentTracks = function() {
     const tracksHTML = currentTracks.map((track) => `
         <div class="track-item" onclick="window.playSong('${track.uri}', ${isLikedSongsOnly}, this)">
             <div class="track-image-container">
-                <img src="${(track.album.images && track.album.images[0] && track.album.images[0].url) || 'images/spotify/default-song.png'}"
+                <img src="${getTrackImage(track)}"
                      alt="${track.name}"
                      class="track-image"
                      onerror="this.src='images/spotify/default-song.png'"/>
@@ -560,7 +605,7 @@ window.displayCurrentTracks = function() {
             </div>
             <div class="track-info">
                 <div class="track-name">${track.name}</div>
-                <div class="track-artist">${track.artists.map((artist) => artist.name).join(', ')}</div>
+                <div class="track-artist">${getArtistNames(track)}</div>
             </div>
         </div>
     `).join('');
@@ -953,10 +998,7 @@ function setCookie(name, value, expiryMinutes) {
 }
 
 function setCookieDays(name, value, expiryDays) {
-    const date = new Date();
-    date.setTime(date.getTime() + (expiryDays * 24 * 60 * 60 * 1000));
-    const expires = "expires=" + date.toUTCString();
-    document.cookie = `${name}=${value}; ${expires}; path=/; SameSite=Strict; Secure=${window.location.protocol === 'https:'}`;
+    setCookie(name, value, expiryDays * 24 * 60);
 }
 
 function getCookie(name) {
@@ -1019,18 +1061,7 @@ function clearSpotifyTokens() {
 
 // Function to toggle shuffle state
 async function toggleShuffle() {
-    const hasSpotifyPremium = localStorage.getItem('isPremium') === 'true';
-    if (!hasSpotifyPremium) {
-        showToast('Spotify Premium is required to use this feature.', true);
-        const shuffleButton = document.getElementById('shuffle-button');
-        if (shuffleButton) {
-            shuffleButton.src = 'images/spotify/shuffle-inactive.png';
-            setShuffleButtonDimensions(shuffleButton, 'inactive');
-            shuffleButton.style.cursor = 'not-allowed';
-            shuffleButton.style.opacity = '0.5';
-        }
-        return;
-    }
+    if (!requirePremium('Shuffle')) return;
 
     const shuffleButton = document.getElementById('shuffle-button');
     const repeatButton = document.getElementById('repeat-button');
@@ -1045,186 +1076,49 @@ async function toggleShuffle() {
         return;
     }
 
+    // Read current state from button DOM — avoids a round-trip GET before toggling
+    const isShuffleOn = shuffleButton.src.includes('shuffle-active');
+
+    // Check repeat button to block shuffle when repeat is active
+    if (!isShuffleOn && repeatButton.src && !repeatButton.src.includes('repeat-inactive')) {
+        showToast('Please turn off repeat mode before enabling shuffle.', true);
+        return;
+    }
+
+    // Optimistic UI update
+    if (!isShuffleOn) {
+        shuffleButton.src = 'images/spotify/shuffle-active.png';
+        setShuffleButtonDimensions(shuffleButton, 'active');
+        repeatButton.src = 'images/spotify/repeat-inactive.png';
+        setRepeatButtonDimensions(repeatButton, 'inactive');
+        repeatButton.style.opacity = '0.5';
+        repeatButton.style.cursor = 'not-allowed';
+    } else {
+        shuffleButton.src = 'images/spotify/shuffle-inactive.png';
+        setShuffleButtonDimensions(shuffleButton, 'inactive');
+        repeatButton.style.opacity = '1';
+        repeatButton.style.cursor = 'pointer';
+    }
+    shuffleButton.style.opacity = '1';
+    shuffleButton.style.cursor = 'pointer';
+    showToast(!isShuffleOn ? 'Shuffle is on' : 'Shuffle is off');
+
     try {
-        // Get current state first
-        const state = await callSpotifyApi('/me/player');
-        if (!state || !state.item) {
-            shuffleButton.src = 'images/spotify/shuffle-inactive.png';
-            setShuffleButtonDimensions(shuffleButton, 'inactive');
-            shuffleButton.style.cursor = 'not-allowed';
-            shuffleButton.style.opacity = '0.5';
-            showToast('No song is currently playing.', true);
-            return;
-        }
-
-        const isShuffleOn = state.shuffle_state;
-
-        // Check repeat state before enabling shuffle
-        if (!isShuffleOn && state.repeat_state !== 'off') {
-            showToast('Please turn off repeat mode before enabling shuffle.', true);
-            shuffleButton.style.cursor = 'not-allowed';
-            shuffleButton.style.opacity = '0.5';
-            return;
-        }
-
-        // Update shuffle state through API first
         await callSpotifyApi('/me/player/shuffle?state=' + (!isShuffleOn), 'PUT');
-
-        // Only update UI after successful API call
         if (!isShuffleOn) {
-            shuffleButton.src = 'images/spotify/shuffle-active.png';
-            setShuffleButtonDimensions(shuffleButton, 'active');
-            // Disable repeat button when shuffle is on
-            repeatButton.src = 'images/spotify/repeat-inactive.png';
-            setRepeatButtonDimensions(repeatButton, 'inactive');
-            repeatButton.style.opacity = '0.5';
-            repeatButton.style.cursor = 'not-allowed';
             await callSpotifyApi('/me/player/repeat?state=off', 'PUT');
-        } else {
-            shuffleButton.src = 'images/spotify/shuffle-inactive.png';
-            setShuffleButtonDimensions(shuffleButton, 'inactive');
-            // Re-enable repeat button when shuffle is off
-            repeatButton.style.opacity = '1';
-            repeatButton.style.cursor = 'pointer';
         }
-        shuffleButton.style.opacity = '1';
-        shuffleButton.style.cursor = 'pointer';
-
-        // Show feedback to user
-        showToast(!isShuffleOn ? 'Shuffle is on' : 'Shuffle is off');
-
     } catch (error) {
+        // Revert on failure
         if (!error.message.includes('404')) {
+            shuffleButton.src = isShuffleOn ? 'images/spotify/shuffle-active.png' : 'images/spotify/shuffle-inactive.png';
+            setShuffleButtonDimensions(shuffleButton, isShuffleOn ? 'active' : 'inactive');
+            shuffleButton.style.opacity = isShuffleOn ? '1' : '0.5';
+            shuffleButton.style.cursor = isShuffleOn ? 'pointer' : 'not-allowed';
             showToast('Unable to change shuffle mode. Please try again.', true);
-            // Reset to inactive state on error
-            shuffleButton.src = 'images/spotify/shuffle-inactive.png';
-            setShuffleButtonDimensions(shuffleButton, 'inactive');
-            shuffleButton.style.cursor = 'not-allowed';
-            shuffleButton.style.opacity = '0.5';
         }
     }
 }
-
-// Function to toggle repeat state
-// async function toggleRepeat() {
-//     const hasSpotifyPremium = localStorage.getItem('isPremium') === 'true';
-//     if (!hasSpotifyPremium) {
-//         showToast('Spotify Premium is required to use this feature.', true);
-//         const repeatButton = document.getElementById('repeat-button');
-//         if (repeatButton) {
-//             repeatButton.src = 'images/spotify/repeat-inactive.png';
-//             setRepeatButtonDimensions(repeatButton, 'inactive');
-//             repeatButton.style.cursor = 'not-allowed';
-//             repeatButton.style.opacity = '0.5';
-//         }
-//         return;
-//     }
-
-//     const repeatButton = document.getElementById('repeat-button');
-//     const shuffleButton = document.getElementById('shuffle-button');
-//     if (!repeatButton || !shuffleButton) return;
-
-//     if (!isPlaybackAvailable) {
-//         repeatButton.src = 'images/spotify/repeat-inactive.png';
-//         setRepeatButtonDimensions(repeatButton, 'inactive');
-//         repeatButton.style.cursor = 'not-allowed';
-//         repeatButton.style.opacity = '0.5';
-//         showToast('No playback available to repeat.', true);
-//         return;
-//     }
-
-//     try {
-//         // Get current state first
-//         const state = await callSpotifyApi('/me/player');
-//         if (!state || !state.item) {
-//             repeatButton.src = 'images/spotify/repeat-inactive.png';
-//             setRepeatButtonDimensions(repeatButton, 'inactive');
-//             repeatButton.style.cursor = 'not-allowed';
-//             repeatButton.style.opacity = '0.5';
-//             showToast('No song is currently playing.', true);
-//             return;
-//         }
-
-//         // Check if shuffle is on before enabling repeat
-//         if (state.repeat_state === 'off' && state.shuffle_state) {
-//             showToast('Please turn off shuffle mode before enabling repeat.', true);
-//             repeatButton.style.cursor = 'not-allowed';
-//             return;
-//         }
-
-//         let nextState;
-//         // Current states: 'off', 'context' (playlist/album), 'track' (single track)
-//         switch (state.repeat_state) {
-//             case 'off':
-//                 nextState = 'context';
-//                 break;
-//             case 'context':
-//                 nextState = 'track';
-//                 break;
-//             case 'track':
-//                 nextState = 'off';
-//                 break;
-//             default:
-//                 nextState = 'off';
-//         }
-
-//         // Update repeat state through API first
-//         await callSpotifyApi('/me/player/repeat?state=' + nextState, 'PUT');
-
-//         // Only update UI after successful API call
-//         switch (nextState) {
-//             case 'off':
-//                 repeatButton.src = 'images/spotify/repeat-inactive.png';
-//                 setRepeatButtonDimensions(repeatButton, 'inactive');
-//                 // Re-enable shuffle button when repeat is off
-//                 shuffleButton.style.opacity = '1';
-//                 shuffleButton.style.cursor = 'pointer';
-//                 break;
-//             case 'context':
-//                 repeatButton.src = 'images/spotify/repeat-active.png';
-//                 setRepeatButtonDimensions(repeatButton, 'active');
-//                 // Disable shuffle button when repeat is on
-//                 shuffleButton.src = 'images/spotify/shuffle-inactive.png';
-//                 setShuffleButtonDimensions(shuffleButton, 'inactive');
-//                 shuffleButton.style.opacity = '0.5';
-//                 shuffleButton.style.cursor = 'not-allowed';
-//                 await callSpotifyApi('/me/player/shuffle?state=false', 'PUT');
-//                 break;
-//             case 'track':
-//                 repeatButton.src = 'images/spotify/repeat-1.png';
-//                 setRepeatButtonDimensions(repeatButton, 'repeat-1');
-//                 // Disable shuffle button when repeat is on
-//                 shuffleButton.src = 'images/spotify/shuffle-inactive.png';
-//                 setShuffleButtonDimensions(shuffleButton, 'inactive');
-//                 shuffleButton.style.opacity = '0.5';
-//                 shuffleButton.style.cursor = 'not-allowed';
-//                 await callSpotifyApi('/me/player/shuffle?state=false', 'PUT');
-//                 break;
-//         }
-
-//         // Update button appearance
-//         repeatButton.style.cursor = 'pointer';
-//         repeatButton.style.opacity = '1';
-
-//         // Show feedback to user
-//         const stateMessages = {
-//             off: 'Repeat is off',
-//             context: 'Repeating playlist/album',
-//             track: 'Repeating current track'
-//         };
-//         showToast(stateMessages[nextState]);
-
-//     } catch (error) {
-//         if (!error.message.includes('404')) {
-//             showToast('Unable to change repeat mode. Please try again.', true);
-//             // Reset to inactive state on error
-//             repeatButton.src = 'images/spotify/repeat-inactive.png';
-//             setRepeatButtonDimensions(repeatButton, 'inactive');
-//             repeatButton.style.cursor = 'not-allowed';
-//             repeatButton.style.opacity = '0.5';
-//         }
-//     }
-// }
 
 // Function to toggle popularity sort
 function togglePopularitySort() {
@@ -1265,462 +1159,6 @@ function togglePopularitySort() {
     // Redisplay tracks
     displayCurrentTracks();
 }
-
-// Function to skip to previous track
-// async function playPreviousTrack() {
-//     // Prevent rapid consecutive clicks
-//     if (prevTrackTimeout) {
-//         showToast('Please wait a moment before changing tracks.', true);
-//         return;
-//     }
-
-//     const hasSpotifyPremium = localStorage.getItem('isPremium') === 'true';
-//     if (!hasSpotifyPremium) {
-//         showToast('Spotify Premium is required to use this feature.', true);
-//         return;
-//     }
-
-//     try {
-//         // Set cooldown immediately
-//         prevTrackTimeout = setTimeout(() => {
-//             prevTrackTimeout = null;
-//         }, PREV_TRACK_DEBOUNCE);
-
-//         // Get current playback state
-//         const state = await callSpotifyApi('/me/player');
-//         if (!state) {
-//             showToast('Unable to get playback state.', true);
-//             return;
-//         }
-
-//         // Handle liked songs navigation
-//         if (isPlayingFromLikedSongs && currentLikedSongsQueue.length > 0) {
-//             if (currentTrackIndexInQueue > 0) {
-//                 if (state.progress_ms > 3000) {
-//                     // If more than 3 seconds in, restart current track
-//                     await callSpotifyApi('/me/player/seek?position_ms=0', 'PUT');
-//                     // Clear the timeout to allow immediate next click
-//                     if (prevTrackTimeout) {
-//                         clearTimeout(prevTrackTimeout);
-//                         prevTrackTimeout = null;
-//                     }
-//                     // Show message that they can click again immediately
-//                     showToast('Track restarted - you can click again to go to previous track');
-//                 } else {
-//                     currentTrackIndexInQueue--;
-//                     const prevTrack = currentLikedSongsQueue[currentTrackIndexInQueue];
-//                     // Update UI before API call for better responsiveness
-//                     updateSongInfo({
-//                         image: (prevTrack.album.images && prevTrack.album.images[0]
-//  && prevTrack.album.images[0].url)
-// || 'images/spotify/default-song.png',
-//                         name: prevTrack.name,
-//                         artists: prevTrack.artists.map((artist) => artist.name).join(', ')
-//                     });
-//                     await playSong(prevTrack.uri, true);
-//                 }
-//             } else {
-//                 showToast('This is the first song in your liked songs.', true);
-//                 return;
-//             }
-//         } else if (state.context && state.context.type === 'playlist') {
-//             // For playlist playback
-//             if (state.progress_ms > 3000) {
-//                 // If more than 3 seconds in, restart current track
-//                 await callSpotifyApi('/me/player/seek?position_ms=0', 'PUT');
-//                 // Clear the timeout to allow immediate next click
-//                 if (prevTrackTimeout) {
-//                     clearTimeout(prevTrackTimeout);
-//                     prevTrackTimeout = null;
-//                 }
-//                 // Show message that they can click again immediately
-//                 showToast('Track restarted - you can click again to go to previous track');
-//             } else {
-//                 // Update UI immediately with current track info for better responsiveness
-//                 if (state.item) {
-//                     updateSongInfo({
-//                         image: (state.item.album.images
-// && state.item.album.images[0] && state.item.album.images[0].url)
-//  || 'images/spotify/default-song.png',
-//                         name: state.item.name,
-//                         artists: state.item.artists.map((artist) => artist.name).join(', ')
-//                     });
-//                 }
-
-//                 // Go to previous track
-//                 await callSpotifyApi('/me/player/previous', 'POST');
-
-//                 // Get updated state immediately after track change
-//                 const newState = await callSpotifyApi('/me/player');
-//                 if (newState && newState.item) {
-//                     updateSongInfo({
-//                         image: (newState.item.album.images && newState.item.album.images[0]
-// && newState.item.album.images[0].url) || 'images/spotify/default-song.png',
-//                         name: newState.item.name,
-//                         artists: newState.item.artists.map((artist) => artist.name).join(', ')
-//                     });
-//                 }
-//             }
-//         } else {
-//             // For single tracks
-//             if (state.progress_ms > 3000) {
-//                 await callSpotifyApi('/me/player/seek?position_ms=0', 'PUT');
-//                 showToast('Restarted current track. Click again to go to previous track.');
-//             } else {
-//                 showToast('Previous track is not available for single tracks.', true);
-//                 return;
-//             }
-//         }
-
-//         // Update play button state
-//         isPlaying = true;
-//         updatePlayButtonState();
-
-//         // Update control buttons state immediately
-//         updateControlButtonsState(true);
-
-//         // Sync playback state in the background
-//         syncPlaybackState().catch(() => {
-//             // Silently handle sync errors to prevent UI disruption
-//         });
-//     } catch (error) {
-//         if (!error.message.includes('404')) {
-//             showToast('Unable to play previous track. Please try again.', true);
-//         }
-//     }
-// }
-
-// Function to skip to next track
-// async function playNextTrack() {
-//     // Prevent rapid consecutive clicks
-//     if (nextTrackTimeout) {
-//         showToast('Please wait a moment before changing tracks.', true);
-//         return;
-//     }
-
-//     // Set cooldown immediately
-//     nextTrackTimeout = setTimeout(() => {
-//         nextTrackTimeout = null;
-//         isRepeatOneProcessing = false; // Reset the lock when cooldown expires
-//     }, NEXT_TRACK_DEBOUNCE);
-
-//     const hasSpotifyPremium = localStorage.getItem('isPremium') === 'true';
-//     if (!hasSpotifyPremium) {
-//         showToast('Spotify Premium is required to use this feature.', true);
-//         return;
-//     }
-
-//     try {
-//         // Get current playback state to check repeat and shuffle modes
-//         const currentState = await callSpotifyApi('/me/player');
-//         if (!currentState) {
-//             showToast('Unable to get playback state.', true);
-//             return;
-//         }
-
-//         // Store current repeat and shuffle states
-//         const currentRepeatState = currentState.repeat_state;
-//         const currentShuffleState = currentState.shuffle_state;
-
-//         // If repeat-1 (track) mode is on, replay the current track
-//         if (currentRepeatState === 'track') {
-//             // Check if we're already processing a repeat-1 action
-//             if (isRepeatOneProcessing) {
-//                 return;
-//             }
-
-//             // Set the processing lock
-//             isRepeatOneProcessing = true;
-
-//             try {
-//                 if (isPlayingFromLikedSongs && currentLikedSongsQueue.length > 0) {
-//                     const currentTrack = currentLikedSongsQueue[currentTrackIndexInQueue];
-//                     await playSong(currentTrack.uri, true);
-//                     updateSongInfo({
-//                         image: (currentTrack.album.images && currentTrack.album.images[0]
-// && currentTrack.album.images[0].url)
-// || 'images/spotify/default-song.png',
-//                         name: currentTrack.name,
-//                         artists: currentTrack.artists.map((artist) => artist.name).join(', ')
-//                     });
-//                 } else {
-//                     // For non-liked songs, seek to start
-//                     await callSpotifyApi(`/me/player/seek?position_ms=0`, 'PUT');
-//                 }
-
-//                 // Ensure repeat state is maintained
-//                 await callSpotifyApi('/me/player/repeat?state=track', 'PUT');
-//                 const repeatButton = document.getElementById('repeat-button');
-//                 if (repeatButton) {
-//                     repeatButton.src = 'images/spotify/repeat-1.png';
-//                     setRepeatButtonDimensions(repeatButton, 'repeat-1');
-//                 }
-//                 return;
-//             } catch (error) {
-//                 // Reset the processing lock on error
-//                 isRepeatOneProcessing = false;
-//                 throw error;
-//             }
-//         }
-
-//         if (isPlayingFromLikedSongs && currentLikedSongsQueue.length > 0) {
-//             // Get next track index based on shuffle state
-//             currentTrackIndexInQueue =
-// await getNextTrackIndex(currentTrackIndexInQueue, currentLikedSongsQueue.length);
-//             const nextTrack = currentLikedSongsQueue[currentTrackIndexInQueue];
-//             await playSong(nextTrack.uri, true);
-//             updateSongInfo({
-//                 image: (nextTrack.album.images && nextTrack.album.images[0]
-// && nextTrack.album.images[0].url)
-// || 'images/spotify/default-song.png',
-//                 name: nextTrack.name,
-//                 artists: nextTrack.artists.map((artist) => artist.name).join(', ')
-//             });
-//         } else if (currentState.context && currentState.context.type === 'playlist') {
-//             // Get playlist details to check if we're at the last track
-//             const playlistId = currentState.context.uri.split(':')[2];
-//             const playlist = await callSpotifyApi(`/playlists/${playlistId}`);
-//             const currentTrackNumber = currentState.item.track_number;
-//             const totalTracks = playlist.tracks.total;
-
-//             // If at last track and not shuffling or repeating
-//             if (currentTrackNumber === totalTracks
-// && !currentShuffleState && currentRepeatState === 'off') {
-//                 // Restart playlist from beginning
-//                 const deviceId = localStorage.getItem('spotify_device_id');
-//                 await callSpotifyApi(`/me/player/play?device_id=${deviceId}`, 'PUT', {
-//                     context_uri: currentState.context.uri,
-//                     offset: { position: 0 }
-//                 });
-//                 showToast('Restarting playlist from beginning');
-//             } else {
-//                 // Use Spotify's default next behavior
-//                 await callSpotifyApi('/me/player/next', 'POST');
-//             }
-
-//             // Get the new track info after skipping
-//             const newState = await callSpotifyApi('/me/player');
-//             if (newState && newState.item) {
-//                 updateSongInfo({
-//                     image: (newState.item.album.images && newState.item.album.images[0]
-// && newState.item.album.images[0].url) || 'images/spotify/default-song.png',
-//                     name: newState.item.name,
-//                     artists: newState.item.artists.map((artist) => artist.name).join(', ')
-//                 });
-//             }
-//         } else {
-//             showToast('Next track is not available for single tracks.', true);
-//             return;
-//         }
-
-//         // Update play button state after successful track change
-//         isPlaying = true;
-//         updatePlayButtonState();
-
-//         // Restore repeat and shuffle states
-//         if (currentRepeatState) {
-//             await callSpotifyApi(`/me/player/repeat?state=${currentRepeatState}`, 'PUT');
-//             const repeatButton = document.getElementById('repeat-button');
-//             if (repeatButton) {
-//                 switch (currentRepeatState) {
-//                     case 'off':
-//                         repeatButton.src = 'images/spotify/repeat-inactive.png';
-//                         setRepeatButtonDimensions(repeatButton, 'inactive');
-//                         break;
-//                     case 'context':
-//                         repeatButton.src = 'images/spotify/repeat-active.png';
-//                         setRepeatButtonDimensions(repeatButton, 'active');
-//                         break;
-//                     case 'track':
-//                         repeatButton.src = 'images/spotify/repeat-1.png';
-//                         setRepeatButtonDimensions(repeatButton, 'repeat-1');
-//                         break;
-//                     default:
-//                         repeatButton.src = 'images/spotify/repeat-inactive.png';
-//                         setRepeatButtonDimensions(repeatButton, 'inactive');
-//                         break;
-//                 }
-//             }
-//         }
-
-//         if (currentShuffleState !== undefined) {
-//             await callSpotifyApi(`/me/player/shuffle?state=${currentShuffleState}`, 'PUT');
-//         const shuffleButton = document.getElementById('shuffle-button');
-//         if (shuffleButton) {
-//                 shuffleButton.src = currentShuffleState
-// ? 'images/spotify/shuffle-active.png' : 'images/spotify/shuffle-inactive.png';
-//                 setShuffleButtonDimensions(shuffleButton, currentShuffleState
-// ? 'active' : 'inactive');
-//             }
-//         }
-
-//         // Update control buttons state and sync with Spotify
-//         await syncPlaybackState();
-//     } catch (error) {
-//         if (!error.message.includes('404')) {
-//             showToast('Unable to play next track. Please try again.', true);
-//         }
-//     }
-// }
-
-// Function to update previous button state
-// async function updatePrevButtonState() {
-//     const prevButton = document.getElementById('prev-button');
-//     if (!prevButton) return;
-
-//     try {
-//         if (!isPlaybackAvailable) {
-//             prevButton.style.opacity = '0.5';
-//             prevButton.style.cursor = 'not-allowed';
-//             prevButton.onclick = (e) => {
-//                 e.preventDefault();
-//                 e.stopPropagation();
-//                 showToast('No song available to go back to.', true);
-//             };
-//             return;
-//         }
-
-//         // Get current playback state
-//         const playbackState = await callSpotifyApi('/me/player');
-//         if (!playbackState) {
-//             prevButton.style.opacity = '0.5';
-//             prevButton.style.cursor = 'not-allowed';
-//             return;
-//         }
-
-//         // If in repeat-1 mode, disable prev button
-//         if (playbackState.repeat_state === 'track') {
-//             prevButton.style.opacity = '0.5';
-//             prevButton.style.cursor = 'not-allowed';
-//             prevButton.onclick = (e) => {
-//                 e.preventDefault();
-//                 e.stopPropagation();
-//                 showToast('Previous track disabled in repeat one mode.', true);
-//             };
-//             return;
-//         }
-
-//         // Handle different playback contexts
-//         if (isPlayingFromLikedSongs) {
-//             // Enable if we have previous tracks in liked songs queue
-//             const hasPrevious = currentTrackIndexInQueue > 0;
-//             prevButton.style.opacity = hasPrevious ? '1' : '0.5';
-//             prevButton.style.cursor = hasPrevious ? 'pointer' : 'not-allowed';
-//             prevButton.onclick = hasPrevious ? playPreviousTrack : (e) => {
-//                 e.preventDefault();
-//                 e.stopPropagation();
-//                 showToast('This is the first song in your liked songs.', true);
-//             };
-//         } else if (playbackState.context && playbackState.context.type === 'playlist') {
-//             // For playlists, always enable the button
-//             prevButton.style.opacity = '1';
-//             prevButton.style.cursor = 'pointer';
-//             prevButton.onclick = playPreviousTrack;
-//         } else {
-//             // For single tracks, only enable if we can restart
-//             const hasPrevious = playbackState.progress_ms > 3000;
-//             prevButton.style.opacity = hasPrevious ? '1' : '0.5';
-//             prevButton.style.cursor = hasPrevious ? 'pointer' : 'not-allowed';
-//             prevButton.onclick = hasPrevious ? playPreviousTrack : (e) => {
-//                 e.preventDefault();
-//                 e.stopPropagation();
-//                 showToast('Previous track is not available for single tracks.', true);
-//             };
-//         }
-//     } catch (error) {
-//         // If there's an error, disable the button
-//         prevButton.style.opacity = '0.5';
-//         prevButton.style.cursor = 'not-allowed';
-//         prevButton.onclick = (e) => {
-//             e.preventDefault();
-//             e.stopPropagation();
-//             showToast('Unable to check previous track availability.', true);
-//         };
-//     }
-// }
-
-// Function to update next button state
-// async function updateNextButtonState() {
-//     const nextButton = document.getElementById('next-button');
-//     if (!nextButton) return;
-
-//     try {
-//         if (!isPlaybackAvailable) {
-//             nextButton.style.opacity = '0.5';
-//             nextButton.style.cursor = 'not-allowed';
-//             nextButton.onclick = (e) => {
-//                 e.preventDefault();
-//                 e.stopPropagation();
-//                 showToast('No song available to skip to.', true);
-//             };
-//             return;
-//         }
-
-//         // Get current playback state
-//         const state = await callSpotifyApi('/me/player');
-//         if (!state || !state.item) {
-//             nextButton.style.opacity = '0.5';
-//             nextButton.style.cursor = 'not-allowed';
-//             nextButton.onclick = (e) => {
-//                 e.preventDefault();
-//                 e.stopPropagation();
-//                 showToast('No next song available.', true);
-//             };
-//             return;
-//         }
-
-//         // If in repeat-1 mode, disable next button
-//         if (state.repeat_state === 'track') {
-//             nextButton.style.opacity = '0.5';
-//             nextButton.style.cursor = 'not-allowed';
-//             nextButton.onclick = (e) => {
-//                 e.preventDefault();
-//                 e.stopPropagation();
-//                 showToast('Next track disabled in repeat one mode.', true);
-//             };
-//             return;
-//         }
-
-//         // If playing from a playlist, always enable next button
-//         if (state.context && state.context.type === 'playlist') {
-//             nextButton.style.opacity = '1';
-//             nextButton.style.cursor = 'pointer';
-//             nextButton.onclick = playNextTrack;
-//             return;
-//         }
-
-//         // If playing from liked songs, check if we're at the last track
-//         if (isPlayingFromLikedSongs) {
-//             const hasNext = currentTrackIndexInQueue < currentLikedSongsQueue.length - 1;
-//             nextButton.style.opacity = hasNext ? '1' : '0.5';
-//             nextButton.style.cursor = hasNext ? 'pointer' : 'not-allowed';
-//             nextButton.onclick = hasNext ? playNextTrack : (e) => {
-//                 e.preventDefault();
-//                 e.stopPropagation();
-//                 showToast('This is the last song in your liked songs.', true);
-//             };
-//             return;
-//         }
-
-//         // For single tracks, disable next button
-//         nextButton.style.opacity = '0.5';
-//         nextButton.style.cursor = 'not-allowed';
-//         nextButton.onclick = (e) => {
-//             e.preventDefault();
-//             e.stopPropagation();
-//             showToast('Next track is not available for single tracks.', true);
-//         };
-//     } catch (error) {
-//         // If there's an error, disable the button
-//         nextButton.style.opacity = '0.5';
-//         nextButton.style.cursor = 'not-allowed';
-//         nextButton.onclick = (e) => {
-//             e.preventDefault();
-//             e.stopPropagation();
-//             showToast('No next song available.', true);
-//         };
-//     }
-// }
 
 function saveAppState() {
   try {
@@ -2275,22 +1713,37 @@ function initializeSpotifyPlayer(token) {
                                     const hasPrevious = state.position > 3000;
                                     prevButton.style.opacity = hasPrevious ? '1' : '0.5';
                                     prevButton.style.cursor = hasPrevious ? 'pointer' : 'not-allowed';
+                                    // Track just started — schedule re-enable once 3 s threshold is crossed.
+                                    // Cancel any previous timer so concurrent events don't stack up.
+                                    clearTimeout(prevButtonReenableTimer);
+                                    if (!hasPrevious && !state.paused) {
+                                        prevButtonReenableTimer = setTimeout(() => {
+                                            prevButtonReenableTimer = null;
+                                            const btn = document.getElementById('prev-button');
+                                            if (btn && !isPlayingFromLikedSongs) {
+                                                btn.style.opacity = '1';
+                                                btn.style.cursor = 'pointer';
+                                            }
+                                        }, 3100);
+                                    }
                                 }
                             }
 
-                            // Update next button state
+                            // Update next button state directly from SDK state (no API call)
                             const nextButton = document.getElementById('next-button');
                             if (nextButton) {
                                 if (isPlayingFromLikedSongs) {
-                                    // If playing from liked songs, check if we're at the last track
-                                    // eslint-disable-next-line max-len
                                     const hasNext = currentTrackIndexInQueue < currentLikedSongsQueue.length - 1;
                                     nextButton.style.opacity = hasNext ? '1' : '0.5';
                                     nextButton.style.cursor = hasNext ? 'pointer' : 'not-allowed';
+                                    nextButton.onclick = hasNext ? playNextTrack : (e) => {
+                                        e.preventDefault(); e.stopPropagation();
+                                        showToast('This is the last song in your liked songs.', true);
+                                    };
                                 } else {
-                                    // Enable next button if we have a track playing
                                     nextButton.style.opacity = '1';
                                     nextButton.style.cursor = 'pointer';
+                                    nextButton.onclick = playNextTrack;
                                 }
                             }
 
@@ -2497,7 +1950,7 @@ async function togglePlayback() {
         return;
     }
 
-    if (!localStorage.getItem('spotify_access_token')) {
+    if (!getSpotifyAccessToken()) {
         window.location.href = '/spotify/authorise';
         return;
     }
@@ -2509,65 +1962,53 @@ async function togglePlayback() {
 
     const deviceId = localStorage.getItem('spotify_device_id');
     if (isPlaying) {
+        // Optimistic update — flip the button immediately, then call API
+        isPlaying = false;
+        updatePlayButtonState();
         try {
-            // Get current playback state before pausing
-            const currentState = await callSpotifyApi('/me/player');
-            if (currentState && currentState.progress_ms) {
-                currentPlaybackPosition = currentState.progress_ms;
-            }
-
-        // Pause music
             await callSpotifyApi('/me/player/pause', 'PUT');
-            // Update state immediately as the pause was successful
-                isPlaying = false;
-                updatePlayButtonState();
         } catch (error) {
-            // For pause action, 404 usually means the track was already paused
-            // or the SDK is doing its internal checks
-            if (error.message.includes('404')
+            const isExpected = error.message.includes('404')
                 || error.message.includes('CloudPlaybackClientError')
-                || error.message.includes('item_before_load')) {
-                // Still update state as the pause was likely successful
-                isPlaying = false;
+                || error.message.includes('item_before_load');
+            if (!isExpected) {
+                // Revert on real failure
+                isPlaying = true;
                 updatePlayButtonState();
-            } else {
-                // Only show error for real failures
                 showToast('Unable to pause playback. Please try again.', true);
             }
         }
     } else if (deviceId) {
+        // Optimistic update
+        isPlaying = true;
+        updatePlayButtonState();
         try {
-            // Get current track info
             const currentState = await callSpotifyApi('/me/player');
-
             if (currentState && currentState.item) {
-                // Resume playback at saved position
                 await callSpotifyApi(`/me/player/play?device_id=${deviceId}`, 'PUT', {
                     uris: [currentState.item.uri],
                     position_ms: currentPlaybackPosition
                 });
-                isPlaying = true;
-                updatePlayButtonState();
             } else {
-                // Start playback of recent/featured track if no current track
                 const recentTrack = await getUserRecentOrFeaturedTracks();
                 if (!recentTrack) {
-                    showToast('No tracks available to play');
+                    isPlaying = false;
                     isPlaybackAvailable = false;
                     updateControlButtonsState(false);
+                    showToast('No tracks available to play');
                     return;
                 }
                 await callSpotifyApi(`/me/player/play?device_id=${deviceId}`, 'PUT', {
                     uris: [recentTrack]
                 });
-                        isPlaying = true;
-                        updatePlayButtonState();
             }
         } catch (error) {
-            // Handle play errors
-            if (!error.message.includes('404')
-                && !error.message.includes('CloudPlaybackClientError')
-                && !error.message.includes('item_before_load')) {
+            const isExpected = error.message.includes('404')
+                || error.message.includes('CloudPlaybackClientError')
+                || error.message.includes('item_before_load');
+            if (!isExpected) {
+                isPlaying = false;
+                updatePlayButtonState();
                 showToast('Unable to start playback. Please try again.', true);
             }
         }
@@ -2638,8 +2079,18 @@ async function playPreviousTrack() {
             prevTrackTimeout = null;
         }, PREV_TRACK_DEBOUNCE);
 
-        // Get current playback state
-        const state = await callSpotifyApi('/me/player');
+        // Get current playback state using local SDK state (no network call)
+        let _sdkRaw = null;
+        if (window.player && typeof window.player.getCurrentState === 'function') {
+            _sdkRaw = await window.player.getCurrentState();
+        }
+        const state = _sdkRaw ? {
+            progress_ms: _sdkRaw.position,
+            context: _sdkRaw.context && _sdkRaw.context.uri
+                ? { type: _sdkRaw.context.uri.startsWith('spotify:playlist:') ? 'playlist' : 'other', uri: _sdkRaw.context.uri }
+                : null,
+            item: _sdkRaw.track_window && _sdkRaw.track_window.current_track ? _sdkRaw.track_window.current_track : null
+        } : await callSpotifyApi('/me/player');
         if (!state) {
             showToast('Unable to get playback state.', true);
             return;
@@ -2781,8 +2232,21 @@ async function playNextTrack() {
     }
 
     try {
-        // Get current playback state to check repeat and shuffle modes
-        const currentState = await callSpotifyApi('/me/player');
+        // Get current playback state using local SDK state (no network call)
+        let _nextSdkRaw = null;
+        if (window.player && typeof window.player.getCurrentState === 'function') {
+            _nextSdkRaw = await window.player.getCurrentState();
+        }
+        const _repeatMap = ['off', 'context', 'track'];
+        const currentState = _nextSdkRaw ? {
+            repeat_state: _repeatMap[_nextSdkRaw.repeat_mode] ?? 'off',
+            shuffle_state: _nextSdkRaw.shuffle,
+            context: _nextSdkRaw.context && _nextSdkRaw.context.uri
+                ? { type: _nextSdkRaw.context.uri.startsWith('spotify:playlist:') ? 'playlist' : 'other', uri: _nextSdkRaw.context.uri }
+                : null,
+            item: _nextSdkRaw.track_window && _nextSdkRaw.track_window.current_track ? _nextSdkRaw.track_window.current_track : null,
+            _nextTracks: _nextSdkRaw.track_window ? _nextSdkRaw.track_window.next_tracks : []
+        } : await callSpotifyApi('/me/player');
         if (!currentState) {
             showToast('Unable to get playback state.', true);
             return;
@@ -2843,14 +2307,20 @@ async function playNextTrack() {
                 artists: nextTrack.artists.map((artist) => artist.name).join(', ')
             });
         } else if (currentState.context && currentState.context.type === 'playlist') {
-            // Get playlist details to check if we're at the last track
-            const playlistId = currentState.context.uri.split(':')[2];
-            const playlist = await callSpotifyApi(`/playlists/${playlistId}`);
-            const currentTrackNumber = currentState.item.track_number;
-            const totalTracks = playlist.tracks.total;
+            // Determine if we're at the last track
+            let isAtLastTrack;
+            if (currentState._nextTracks !== undefined) {
+                // SDK state available: no queue means last track
+                isAtLastTrack = currentState._nextTracks.length === 0;
+            } else {
+                // API fallback: fetch playlist to compare track numbers
+                const playlistId = currentState.context.uri.split(':')[2];
+                const playlist = await callSpotifyApi(`/playlists/${playlistId}`);
+                isAtLastTrack = currentState.item && currentState.item.track_number === playlist.tracks.total;
+            }
 
             // If at last track and not shuffling or repeating
-            if (currentTrackNumber === totalTracks && !currentShuffleState && currentRepeatState === 'off') {
+            if (isAtLastTrack && !currentShuffleState && currentRepeatState === 'off') {
                 // Restart playlist from beginning
                 const deviceId = localStorage.getItem('spotify_device_id');
                 await callSpotifyApi(`/me/player/play?device_id=${deviceId}`, 'PUT', {
@@ -2949,95 +2419,66 @@ async function toggleRepeat() {
         return;
     }
 
-    try {
-        // Get current state first
-        const state = await callSpotifyApi('/me/player');
-        if (!state || !state.item) {
+    // Read current state from button DOM — avoids a round-trip GET before toggling
+    const repeatSrc = repeatButton.src || '';
+    let currentRepeatState;
+    if (repeatSrc.includes('repeat-1')) currentRepeatState = 'track';
+    else if (repeatSrc.includes('repeat-active')) currentRepeatState = 'context';
+    else currentRepeatState = 'off';
+
+    // Block repeat if shuffle is active
+    if (currentRepeatState === 'off' && shuffleButton.src && shuffleButton.src.includes('shuffle-active')) {
+        showToast('Please turn off shuffle mode before enabling repeat.', true);
+        return;
+    }
+
+    const nextRepeatMap = { off: 'context', context: 'track', track: 'off' };
+    const nextState = nextRepeatMap[currentRepeatState] || 'off';
+
+    // Optimistic UI update — change button appearance immediately
+    switch (nextState) {
+        case 'off':
             repeatButton.src = 'images/spotify/repeat-inactive.png';
             setRepeatButtonDimensions(repeatButton, 'inactive');
-            repeatButton.style.cursor = 'not-allowed';
-            repeatButton.style.opacity = '0.5';
-            showToast('No song is currently playing.', true);
-            return;
-        }
+            shuffleButton.style.opacity = '1';
+            shuffleButton.style.cursor = 'pointer';
+            break;
+        case 'context':
+            repeatButton.src = 'images/spotify/repeat-active.png';
+            setRepeatButtonDimensions(repeatButton, 'active');
+            shuffleButton.src = 'images/spotify/shuffle-inactive.png';
+            setShuffleButtonDimensions(shuffleButton, 'inactive');
+            shuffleButton.style.opacity = '0.5';
+            shuffleButton.style.cursor = 'not-allowed';
+            break;
+        case 'track':
+            repeatButton.src = 'images/spotify/repeat-1.png';
+            setRepeatButtonDimensions(repeatButton, 'repeat-1');
+            shuffleButton.src = 'images/spotify/shuffle-inactive.png';
+            setShuffleButtonDimensions(shuffleButton, 'inactive');
+            shuffleButton.style.opacity = '0.5';
+            shuffleButton.style.cursor = 'not-allowed';
+            break;
+    }
+    repeatButton.style.cursor = 'pointer';
+    repeatButton.style.opacity = '1';
+    const stateMessages = { off: 'Repeat is off', context: 'Repeating playlist/album', track: 'Repeating current track' };
+    showToast(stateMessages[nextState]);
 
-        // Check if shuffle is on before enabling repeat
-        if (state.repeat_state === 'off' && state.shuffle_state) {
-            showToast('Please turn off shuffle mode before enabling repeat.', true);
-            repeatButton.style.cursor = 'not-allowed';
-            return;
-        }
-
-        let nextState;
-        // Current states: 'off', 'context' (playlist/album), 'track' (single track)
-        switch (state.repeat_state) {
-            case 'off':
-                nextState = 'context';
-                break;
-            case 'context':
-                nextState = 'track';
-                break;
-            case 'track':
-                nextState = 'off';
-                break;
-            default:
-                nextState = 'off';
-        }
-
-        // Update repeat state through API first
+    // Fire API call after UI is already updated
+    try {
         await callSpotifyApi('/me/player/repeat?state=' + nextState, 'PUT');
-
-        // Only update UI after successful API call
-        switch (nextState) {
-            case 'off':
-                repeatButton.src = 'images/spotify/repeat-inactive.png';
-                setRepeatButtonDimensions(repeatButton, 'inactive');
-                // Re-enable shuffle button when repeat is off
-                shuffleButton.style.opacity = '1';
-                shuffleButton.style.cursor = 'pointer';
-                break;
-            case 'context':
-                repeatButton.src = 'images/spotify/repeat-active.png';
-                setRepeatButtonDimensions(repeatButton, 'active');
-                // Disable shuffle button when repeat is on
-                shuffleButton.src = 'images/spotify/shuffle-inactive.png';
-                setShuffleButtonDimensions(shuffleButton, 'inactive');
-                shuffleButton.style.opacity = '0.5';
-                shuffleButton.style.cursor = 'not-allowed';
-                await callSpotifyApi('/me/player/shuffle?state=false', 'PUT');
-                break;
-            case 'track':
-                repeatButton.src = 'images/spotify/repeat-1.png';
-                setRepeatButtonDimensions(repeatButton, 'repeat-1');
-                // Disable shuffle button when repeat is on
-                shuffleButton.src = 'images/spotify/shuffle-inactive.png';
-                setShuffleButtonDimensions(shuffleButton, 'inactive');
-                shuffleButton.style.opacity = '0.5';
-                shuffleButton.style.cursor = 'not-allowed';
-                await callSpotifyApi('/me/player/shuffle?state=false', 'PUT');
-                break;
+        if (nextState !== 'off') {
+            await callSpotifyApi('/me/player/shuffle?state=false', 'PUT');
         }
-
-        // Update button appearance
-        repeatButton.style.cursor = 'pointer';
-        repeatButton.style.opacity = '1';
-
-        // Show feedback to user
-        const stateMessages = {
-            off: 'Repeat is off',
-            context: 'Repeating playlist/album',
-            track: 'Repeating current track'
-        };
-        showToast(stateMessages[nextState]);
-
     } catch (error) {
         if (!error.message.includes('404')) {
+            // Revert to previous state on failure
+            repeatButton.src = repeatSrc;
+            if (repeatSrc.includes('repeat-1')) setRepeatButtonDimensions(repeatButton, 'repeat-1');
+            else if (repeatSrc.includes('repeat-active')) setRepeatButtonDimensions(repeatButton, 'active');
+            else setRepeatButtonDimensions(repeatButton, 'inactive');
             showToast('Unable to change repeat mode. Please try again.', true);
-            // Reset to inactive state on error
-            repeatButton.src = 'images/spotify/repeat-inactive.png';
-            setRepeatButtonDimensions(repeatButton, 'inactive');
-            repeatButton.style.cursor = 'not-allowed';
-            repeatButton.style.opacity = '0.5';
         }
     }
 }
@@ -3097,9 +2538,24 @@ async function updateRepeatButtonState() {
 }
 
 // Initialize Spotify button based on authentication status
-function initializeSpotifyButton() {
+async function initializeSpotifyButton() {
     const spotifyButton = document.getElementById('spotify-container');
-    const storedAccessToken = getSpotifyAccessToken();
+    let storedAccessToken = getSpotifyAccessToken();
+
+    // If no token in storage, try restoring from the server DB (user may have reloaded
+    // after the 1-hour access-token cookie expired but still has a linked account)
+    if (!storedAccessToken) {
+        try {
+            const res = await fetch('/spotify/my-tokens');
+            if (res.ok) {
+                const data = await res.json();
+                if (data.access_token) {
+                    storeSpotifyTokens(data.access_token, data.refresh_token, !!data.is_premium);
+                    storedAccessToken = data.access_token;
+                }
+            }
+        } catch (e) { /* network error — fall through to connect button */ }
+    }
 
     if (storedAccessToken) {
         spotifyButton.innerHTML = `
@@ -3159,8 +2615,10 @@ function initializeSpotifyButton() {
                 </div>
                 <div class="controls" style="position: relative;">
                     <div id="volume-container" style="display: inline-block; position: relative;">
+                        <div id="volume-popup">
+                            <input type="range" id="volume-slider" class="custom-volume-slider" min="0" max="100" value="50" title="Adjust Volume">
+                        </div>
                         <img class="control-button" id="volume-button" src="images/spotify/volumn.png" alt="volume" onclick="toggleMute()" title="Mute/Unmute"/>
-                        <input type="range" id="volume-slider" class="custom-volume-slider" min="0" max="100" value="50" style="position: absolute; left: 50%; top: -98px; transform: translateX(-50%) rotate(180deg); z-index: 10;" title="Adjust Volume">
                     </div>
                     <img class="control-button" id="shuffle-button" src="images/spotify/shuffle-inactive.png" alt="shuffle" onclick="toggleShuffle()" title="Toggle Shuffle"/>
                     <img class="control-button" id="prev-button" src="images/spotify/prev.png" alt="prev-song" onclick="playPreviousTrack()" title="Previous Track"/>
@@ -3184,6 +2642,9 @@ function initializeSpotifyButton() {
 
         // Initialize the Spotify Web Playback SDK
         initializePlayer(storedAccessToken);
+
+        // Wire up volume hover/slider now that the elements exist in the DOM
+        setupVolumeControls();
 
         // Add click event for playing music only to the play button
         const playBtn = document.getElementById('play-button');
@@ -4179,10 +3640,34 @@ async function handleVolumeChange(event) {
     }
 }
 
-// Show/hide volume slider on hover
-window.addEventListener('DOMContentLoaded', () => {
+// Show/hide volume popup on hover — called after the player HTML is injected
+function setupVolumeControls() {
     const volumeContainer = document.getElementById('volume-container');
     const volumeSlider = document.getElementById('volume-slider');
+    const volumePopup = document.getElementById('volume-popup');
+
+    if (volumeContainer && volumePopup) {
+        let hideTimer = null;
+
+        const showPopup = () => {
+            clearTimeout(hideTimer);
+            if (volumeSlider && !volumeSlider.disabled) {
+                volumePopup.style.display = 'block';
+            }
+        };
+
+        const hidePopup = () => {
+            hideTimer = setTimeout(() => {
+                volumePopup.style.display = 'none';
+            }, 120);
+        };
+
+        volumeContainer.addEventListener('mouseenter', showPopup);
+        volumeContainer.addEventListener('mouseleave', hidePopup);
+        volumePopup.addEventListener('mouseenter', showPopup);
+        volumePopup.addEventListener('mouseleave', hidePopup);
+    }
+
     if (volumeSlider) {
         // Set initial volume state
         const initialVolume = 50; // Default volume
@@ -4269,7 +3754,7 @@ window.addEventListener('DOMContentLoaded', () => {
             } catch (error) { /* empty */ }
         }
     });
-});
+}
 
 // Function to update previous button state
 async function updatePrevButtonState() {
@@ -4744,9 +4229,28 @@ window.addEventListener('DOMContentLoaded', async () => {
   const state = restorePlayerState();
   if (state) {
     // Restore button states
-    setShuffle(state.shuffle);
-    setRepeat(state.repeat);
-    setVolume(state.volume);
+    // Restore shuffle button state
+    const shuffleBtn = document.getElementById('shuffle-button');
+    if (shuffleBtn) {
+        shuffleBtn.src = state.shuffle ? 'images/spotify/shuffle-active.png' : 'images/spotify/shuffle-inactive.png';
+        setShuffleButtonDimensions(shuffleBtn, state.shuffle ? 'active' : 'inactive');
+    }
+    // Restore repeat button state (repeat values: 0=off, 1=context, 2=track)
+    const repeatBtn = document.getElementById('repeat-button');
+    if (repeatBtn) {
+        const repeatSrcMap = { 0: 'repeat-inactive', 1: 'repeat-active', 2: 'repeat-1' };
+        const repeatSizeMap = { 0: 'inactive', 1: 'active', 2: 'repeat-1' };
+        const r = (state.repeat != null && state.repeat in repeatSrcMap) ? state.repeat : 0;
+        repeatBtn.src = `images/spotify/${repeatSrcMap[r]}.png`;
+        setRepeatButtonDimensions(repeatBtn, repeatSizeMap[r]);
+    }
+    // Restore volume slider
+    const volSlider = document.getElementById('volume-slider');
+    if (volSlider && state.volume != null) {
+        const volPct = Math.round((state.volume || 0) * 100);
+        volSlider.value = volPct.toString();
+        volSlider.style.setProperty('--progress', `${volPct}%`);
+    }
     // Try to resume playback
     const deviceId = localStorage.getItem('spotify_device_id');
     if (deviceId && state.uri) {

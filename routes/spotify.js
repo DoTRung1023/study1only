@@ -289,7 +289,7 @@ router.get('/my-tokens', async (req, res) => {
         return res.status(404).json({ error: 'Not connected to Spotify' });
     }
     const [rows] = await connection.execute(
-        'SELECT access_token, refresh_token, token_expiry FROM spotify_auth WHERE user_id = ?',
+        'SELECT access_token, refresh_token, token_expiry, is_premium FROM spotify_auth WHERE user_id = ?',
         [userId]
     );
     await connection.end();
