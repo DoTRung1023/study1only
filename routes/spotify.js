@@ -13,12 +13,14 @@ const client_secret = process.env.SPOTIFY_CLIENT_SECRET;
 // Database configuration
 const dbConfig = {
     host: process.env.DB_HOST || 'localhost',
+    port: parseInt(process.env.DB_PORT) || 3306,
     user: process.env.DB_USER || 'root',
+    password: process.env.DB_PASSWORD || '',
     database: process.env.DB_NAME || 'study1only_db'
 };
 
 // Make sure this port matches your Express port (e.g., 38861)
-const redirect_uri = 'http://127.0.0.1:8080/spotify/callback';
+const redirect_uri = process.env.SPOTIFY_REDIRECT_URI || 'http://127.0.0.1:8080/spotify/callback';
 
 // Define scopes for different features
 const BASE_SCOPE = 'user-read-private user-read-email user-read-recently-played';
