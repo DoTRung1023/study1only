@@ -1,13 +1,3 @@
--- Active: 1747301656292@@127.0.0.1@3306
-DROP DATABASE IF EXISTS study1only_db;
-
--- Create database with explicit collation
-CREATE DATABASE IF NOT EXISTS study1only_db
-CHARACTER SET utf8mb4
-COLLATE utf8mb4_unicode_ci;
-
-USE study1only_db;
-
 -- USERS TABLE
 CREATE TABLE IF NOT EXISTS users (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
